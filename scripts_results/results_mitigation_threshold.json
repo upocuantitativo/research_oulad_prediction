@@ -1,0 +1,23 @@
+{
+  "method": "group-aware threshold (disadvantaged prev>0 thr=0.30, advantaged 0.50)",
+  "chosen_threshold": 0.3,
+  "before": {
+    "dTPR": 0.077,
+    "dFPR": 0.0109,
+    "eo_gap": 0.077,
+    "dp_diff": 0.1874,
+    "TPR_dis": 0.8804,
+    "TPR_adv": 0.9574
+  },
+  "after": {
+    "dTPR": -0.0027,
+    "dFPR": -0.047,
+    "eo_gap": 0.047,
+    "dp_diff": 0.1227,
+    "TPR_dis": 0.9601,
+    "TPR_adv": 0.9574
+  },
+  "acc_before": 0.9152,
+  "acc_after": 0.9132,
+  "auc": 0.9691
+}

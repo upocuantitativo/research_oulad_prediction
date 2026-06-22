@@ -1,0 +1,5 @@
+final_result,D1_engagement,D2_diversity,D3_timeliness,D4_persistence,MPI
+Distinction,0.366,-0.228,0.223,-0.08,0.07
+Fail,-0.246,0.131,-0.117,0.048,-0.046
+Pass,0.181,-0.105,0.098,0.013,0.047
+Withdrawn,-0.261,0.17,-0.169,-0.036,-0.074

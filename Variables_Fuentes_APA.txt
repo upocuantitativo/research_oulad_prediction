@@ -1,0 +1,498 @@
+=================================================================================
+VARIABLES Y FUENTES — MAPEO COMPLETO (REFERENCIAS APA 7)
+Predicción del fracaso académico y motivación a partir de OULAD
+Fecha del documento: 4 de mayo de 2026
+=================================================================================
+
+Notas de uso
+- Cada variable lleva: (a) operacionalización propuesta sobre OULAD, y
+  (b) lista numerada de fuentes que la sustentan. La numeración remite a la
+  bibliografía APA 7 que aparece al final.
+- Cuando un trabajo es teórico/conceptual (no empírico sobre OULAD) se marca
+  como [TEORÍA]. Cuando es empírico sobre OULAD u otro LMS se marca [EMPÍRICO].
+- Los enlaces tras cada referencia priorizan, por este orden: DOI > versión PMC
+  / open-access oficial > versión arXiv/IEEE/RG si es la única disponible.
+
+
+
+=================================================================================
+PARTE 1 — DIMENSIONES DEL MOTIVATION PROXY INDEX (MPI)
+=================================================================================
+
+>> ANCLAJE TEÓRICO COMÚN (SDT + EVT + SRL)
+   Ver fuentes [1] [5] [6] [7] [8] [11] [25] [26] que justifican que las cuatro
+   dimensiones del MPI son expresiones conductuales de motivación intrínseca/
+   autónoma (SDT), de expectancia–valor (EVT) y de autorregulación (Pintrich).
+
+   Fuentes:
+     - Ryan & Deci (2000) [TEORÍA]                               → ref. [25]
+     - Deci & Ryan (2000) [TEORÍA]                               → ref. [5]
+     - Wigfield & Eccles (2000) [TEORÍA]                         → ref. [33]
+     - Eccles & Wigfield (2002) [TEORÍA]                         → ref. [6]
+     - Pintrich (2004) [TEORÍA]                                  → ref. [22]
+     - Howard, Bureau, Guay, Chong & Ryan (2021) [META-ANÁLISIS] → ref. [13]
+     - Bureau, Howard, Chong & Guay (2022) [META-ANÁLISIS]       → ref. [2]
+
+
+----------------------------------------------------------------------------------
+DIMENSIÓN 1 — ENGAGEMENT CONSISTENCY (regularidad de acceso al VLE)
+----------------------------------------------------------------------------------
+Operacionalización OULAD:
+  · 1 / (1 + CV semanal de sum_click)       [consistencia inversa de varianza]
+  · proportion_of_active_weeks               [continuidad temporal]
+  · entropía temporal de la distribución semanal de clics (opcional)
+
+Fuentes que la sustentan:
+  [16] Macfadyen & Dawson (2010) [EMPÍRICO LMS]
+  [34] You (2016) [EMPÍRICO LMS]
+  [27] Saqr, Fors & Tedre (2017) [EMPÍRICO LMS]
+  [28] Saqr & López-Pernas (2021) [EMPÍRICO trayectorias]
+  [15] LMS log analytics — persistence & consistency (RG, 2025) [EMPÍRICO]
+  Anclaje teórico: [25] [22] [13]
+
+
+----------------------------------------------------------------------------------
+DIMENSIÓN 2 — RESOURCE DIVERSITY (entropía de tipos de actividad VLE)
+----------------------------------------------------------------------------------
+Operacionalización OULAD:
+  · H = -Σ p(a) · log p(a) / log(K) sobre activity_type, normalizada por los
+    tipos disponibles en cada módulo y semana
+  · contadores específicos por tipo "crítico": homepage, subpage, content, quiz
+
+Fuentes que la sustentan:
+  [10] Hellas et al. (2018) [REVISIÓN SISTEMÁTICA]
+  [32] Wolff, Zdrahal, Nikolov & Pantucek (2013) [EMPÍRICO OU]
+  [4]  Crossley, Paquette, Dascalu, McNamara & Baker (2016) [EMPÍRICO MOOC]
+  [14] Hussain, Zhu, Zhang & Abidi (2018) [EMPÍRICO OULAD]
+  Anclaje teórico (curiosidad/exploración intrínseca): [25] [5]
+
+
+----------------------------------------------------------------------------------
+DIMENSIÓN 3 — ASSESSMENT TIMELINESS (entrega antes del deadline)
+----------------------------------------------------------------------------------
+Operacionalización OULAD:
+  · on_time_rate = entregas con date_submitted ≤ date / total entregas
+  · mean_lead_days = media de (date − date_submitted)
+  · late_submission_rate y missing_rate
+  · flag separado para is_banked = 1
+
+Fuentes que la sustentan:
+  [29] Steel (2007) [META-ANÁLISIS]
+  [35] You (2015) [EMPÍRICO LMS]
+  [30] Tuckman (2005) [EMPÍRICO web course]
+  [24] Romero, López, Luna & Ventura (2013) [EMPÍRICO Moodle]
+  Anclaje teórico (autorregulación, esfuerzo, conscientiousness): [22] [33] [6]
+
+
+----------------------------------------------------------------------------------
+DIMENSIÓN 4 — PERSISTENCE AFTER DIFFICULTY (actividad VLE tras nota baja)
+----------------------------------------------------------------------------------
+Operacionalización OULAD:
+  · ever_low_score (≥1 evaluación con score < 40)
+  · post_low_score_click_ratio_t = clics 7–14 días tras la mala nota /
+    baseline previo del mismo estudiante
+  · cambio relativo del nivel de actividad VLE en torno a evaluaciones adversas
+
+Fuentes que la sustentan:
+  [17] Martin & Marsh (2008) [TEORÍA + ESCALA]
+  [3]  Cassidy (2016) [ESCALA]
+  [36] Zimmerman (2000) [TEORÍA]
+  [9]  Hartnett, St. George & Dron (2011) [EMPÍRICO online]
+  [18] Kloft, Stiehler, Zheng & Pinkwart (2014) [EMPÍRICO MOOC]
+  [21] Motivation for MOOC learning persistence — EVT (PMC9426658) [EMPÍRICO]
+  Anclaje teórico (resiliencia, autoeficacia, EVT): [33] [6] [25]
+
+
+----------------------------------------------------------------------------------
+ÍNDICE COMPUESTO (MPI) — VALIDACIÓN
+----------------------------------------------------------------------------------
+Fuentes que respaldan que un compuesto conductual MPI puede operar como proxy
+motivacional cuando se combina consistencia + diversidad + timing + persistencia:
+  [12] Henrie, Halverson & Graham (2015) [REVISIÓN]
+  [15] Jovanović, Gašević, Dawson, Pardo & Mirriahi (2017) [EMPÍRICO]
+  [19] Exploring motivational regulation & learning design — JLA SLR (2024)
+  [31] Using motivation theory to design equity-focused LA dashboards (2024)
+
+
+
+=================================================================================
+PARTE 2 — OTRAS VARIABLES PREDICTIVAS DEL FRACASO ACADÉMICO EN OULAD
+=================================================================================
+
+----------------------------------------------------------------------------------
+A. FAMILIA EVALUATIVA (la más fuerte tras los snapshots tempranos)
+----------------------------------------------------------------------------------
+
+A.1  weighted_score_t
+     Fórmula: Σ score_i · weight_i / 100, hasta el corte t. Separar TMA / CMA / Exam
+     y marcar is_banked aparte.
+     Fuentes: [11] Hlosta, Zdrahal & Zendulka (2017) [EMPÍRICO OULAD]
+              [1]  Adnan et al. (2021) [EMPÍRICO OULAD]
+              [20] Ouyang, Wu, Zheng, Zhang & Jiao (2022) [EMPÍRICO OULAD]
+              [14] Hussain et al. (2018) [EMPÍRICO OULAD, importancia de variables]
+
+A.2  submission_rate_t
+     Fórmula: entregas observadas / entregas esperadas hasta t.
+     Fuentes: [11] [1] [29] [35]
+
+A.3  on_time_rate_t  /  mean_lead_days_t
+     Fuentes: [29] [35] [30] [24]   (compartidas con MPI Dimensión 3)
+
+A.4  n_low_scores_t  (recuento de evaluaciones con score < 40 hasta t)
+     Fuentes: [11] [1] [14]
+
+
+----------------------------------------------------------------------------------
+B. FAMILIA CONDUCTUAL VLE
+----------------------------------------------------------------------------------
+
+B.1  weekly_click_mean_t  /  total_clicks_t
+     Fuentes: [14] [32] [13_VLE_engage] [27] [28]
+              ([13_VLE_engage] = Hussain & Khan 2022, ref. [14b] abajo)
+
+B.2  active_days_ratio_t   y   max_inactivity_gap_t
+     Fuentes: [28] Saqr & López-Pernas (2021)
+              [16] Macfadyen & Dawson (2010)
+              [34] You (2016)
+              [21_PMC6189675] Student Engagement Predictions in an e-Learning
+                 System (2018) — ver ref. [21b]
+
+B.3  critical_type_clicks_t  (homepage, subpage, content, quiz)
+     Fuentes: [32] Wolff et al. (2013)
+              [14] Hussain et al. (2018) [importancia de variables]
+              [14b] Hussain & Khan (2022)
+
+B.4  activity_entropy_t
+     Fuentes: [4] [10] [14]   (compartidas con MPI Dimensión 2)
+
+B.5  post_lowscore_click_ratio_t
+     Fuentes: [18] Kloft et al. (2014)
+              [17] Martin & Marsh (2008) [TEORÍA]
+              [3]  Cassidy (2016) [ESCALA]
+              [21] Motivation for MOOC learning persistence — EVT
+
+
+----------------------------------------------------------------------------------
+C. FAMILIA REGISTRO E HISTORIAL
+----------------------------------------------------------------------------------
+
+C.1  registration_lead_days  (date_registration − inicio del módulo)
+     Fuentes: [14] Hussain et al. (2018)  [date_registration aparece en top tier]
+              [16] Kuzilek, Hlosta & Zdrahal (2017) [DOCUMENTACIÓN OULAD]
+              [24] Romero et al. (2013)
+
+C.2  num_of_prev_attempts
+     Fuentes: [16k] Kuzilek et al. (2017) [DOCUMENTACIÓN OULAD]
+              [24] Romero et al. (2013)
+              [14] Hussain et al. (2018)
+
+C.3  studied_credits
+     Fuentes: [16k] Kuzilek et al. (2017)
+              [14] Hussain et al. (2018)
+
+
+----------------------------------------------------------------------------------
+D. FAMILIA ESTRUCTURAL / DEMOGRÁFICA  (uso prudente — auditoría de equidad)
+----------------------------------------------------------------------------------
+
+D.1  highest_education
+     Fuentes: [16k] Kuzilek et al. (2017)
+              [14]  Hussain et al. (2018)
+
+D.2  age_band
+     Fuentes: [16k] [23] Riazy, Simbeck & Schreck (2020)
+                  [13H] Hutt, Gardner, Duckworth & D'Mello (2019)
+
+D.3  imd_band
+     Fuentes: [16k] [23]
+
+D.4  disability
+     Fuentes: [16k] [23] [13H]
+
+D.5  region
+     Fuentes: [16k] [23]
+
+D.6  gender
+     Fuentes: [16k] [23] [13H]
+
+   Recomendación basada en [13H]: usar este bloque sobre todo para auditoría de
+   sesgo y calibración, no como motor principal de la decisión pedagógica.
+
+
+----------------------------------------------------------------------------------
+E. DISEÑO TEMPORAL Y PREVENCIÓN DE FUGA DE INFORMACIÓN
+----------------------------------------------------------------------------------
+
+E.1  Cortes múltiples (snapshots a 25%/50%/75% del curso)
+     Fuentes: [1]  Adnan et al. (2021)
+              [10] Hellas et al. (2018)
+              [16k] Kuzilek et al. (2017)  [B vs J advertencia]
+              [37] Week-Wise Early Prediction in VLE — Deep XAI (2022)
+
+E.2  Variables a manejar con cautela (riesgo de leakage)
+     · id_assessment: codifica dificultad/calendario, no al estudiante
+     · date_unregistration: solo aparece tras la baja → leakage casi directo
+     Fuentes: [16k] Kuzilek et al. (2017)
+              [13H] Hutt et al. (2019)
+
+
+----------------------------------------------------------------------------------
+F. EXPLAINABILITY E IMPORTANCIA DE VARIABLES
+----------------------------------------------------------------------------------
+Fuentes:
+  [14] Hussain et al. (2018) — ranking de importancia en OULAD
+  [22B] Predictive Modelling with OULAD — SLR (RG 381904274, 2024)
+  [37C] Course Success Prediction & Early At-Risk via XAI (MDPI 13/21/4157, 2024)
+  [37I] Incorporating Explainable LA to Assist Educators (RG 361013721, 2022)
+
+
+
+=================================================================================
+PARTE 3 — BIBLIOGRAFÍA APA 7 (alfabética)
+=================================================================================
+
+[1]  Adnan, M., Habib, A., Ashraf, J., Mussadiq, S., Raza, A. A., Abid, M.,
+     Bashir, M., & Khan, S. U. (2021). Predicting at-risk students at different
+     percentages of course length for early intervention using machine learning
+     models. IEEE Access, 9, 7519–7539.
+     https://doi.org/10.1109/ACCESS.2021.3049446
+     Open-access (IEEE Xplore): https://ieeexplore.ieee.org/document/9319758
+
+[2]  Bureau, J. S., Howard, J. L., Chong, J. X. Y., & Guay, F. (2022). Pathways
+     to student motivation: A meta-analysis of antecedents of autonomous and
+     controlled motivations. Review of Educational Research, 92(1), 46–72.
+     https://doi.org/10.3102/00346543211042426
+     Open-access (PMC): https://pmc.ncbi.nlm.nih.gov/articles/PMC8935530/
+
+[3]  Cassidy, S. (2016). The Academic Resilience Scale (ARS-30): A new
+     multidimensional construct measure. Frontiers in Psychology, 7, 1787.
+     https://doi.org/10.3389/fpsyg.2016.01787
+     Open-access (Frontiers): https://www.frontiersin.org/articles/10.3389/fpsyg.2016.01787/full
+
+[4]  Crossley, S., Paquette, L., Dascalu, M., McNamara, D. S., & Baker, R. S.
+     (2016). Combining click-stream data with NLP tools to better understand
+     MOOC completion. In Proceedings of the Sixth International Conference on
+     Learning Analytics & Knowledge (LAK '16) (pp. 6–14). ACM.
+     https://doi.org/10.1145/2883851.2883934
+
+[5]  Deci, E. L., & Ryan, R. M. (2000). The "what" and "why" of goal pursuits:
+     Human needs and the self-determination of behavior. Psychological Inquiry,
+     11(4), 227–268.
+     https://doi.org/10.1207/S15327965PLI1104_01
+
+[6]  Eccles, J. S., & Wigfield, A. (2002). Motivational beliefs, values, and
+     goals. Annual Review of Psychology, 53(1), 109–132.
+     https://doi.org/10.1146/annurev.psych.53.100901.135153
+
+[7]  Hartnett, M., St. George, A., & Dron, J. (2011). Examining motivation in
+     online distance learning environments: Complex, multifaceted, and
+     situation-dependent. International Review of Research in Open and
+     Distributed Learning, 12(6), 20–38.
+     https://doi.org/10.19173/irrodl.v12i6.1030
+     Open-access (IRRODL): https://www.irrodl.org/index.php/irrodl/article/view/1030
+
+[8]  [Reservado — entrada teórica adicional, ver [22] Pintrich (2004)]
+
+[9]  Hartnett, M., St. George, A., & Dron, J. (2011). [duplicada en [7]; usar [7]]
+
+[10] Hellas, A., Ihantola, P., Petersen, A., Ajanovski, V. V., Gutica, M.,
+     Hynninen, T., Knutas, A., Leinonen, J., Messom, C., & Liao, S. N. (2018).
+     Predicting academic performance: A systematic literature review. In
+     Proceedings Companion of the 23rd Annual ACM Conference on Innovation and
+     Technology in Computer Science Education (ITiCSE 2018 Companion)
+     (pp. 175–199). ACM.
+     https://doi.org/10.1145/3293881.3295783
+
+[11] Hlosta, M., Zdrahal, Z., & Zendulka, J. (2017). Ouroboros: Early
+     identification of at-risk students without models based on legacy data.
+     In Proceedings of the Seventh International Learning Analytics & Knowledge
+     Conference (LAK '17) (pp. 6–15). ACM.
+     https://doi.org/10.1145/3027385.3027449
+
+[12] Henrie, C. R., Halverson, L. R., & Graham, C. R. (2015). Measuring student
+     engagement in technology-mediated learning: A review. Computers &
+     Education, 90, 36–53.
+     https://doi.org/10.1016/j.compedu.2015.09.005
+
+[13] Howard, J. L., Bureau, J. S., Guay, F., Chong, J. X. Y., & Ryan, R. M.
+     (2021). Student motivation and associated outcomes: A meta-analysis from
+     self-determination theory. Perspectives on Psychological Science, 16(6),
+     1300–1323.
+     https://doi.org/10.1177/1745691620966789
+     Open-access (PubMed): https://pubmed.ncbi.nlm.nih.gov/33593153/
+
+[13H] Hutt, S., Gardner, M., Duckworth, A. L., & D'Mello, S. K. (2019).
+     Evaluating fairness and generalizability in models predicting student
+     outcomes. In Proceedings of the 9th International Conference on Learning
+     Analytics & Knowledge (LAK '19). ACM.
+     https://doi.org/10.1145/3303772.3303791
+
+[14] Hussain, M., Zhu, W., Zhang, W., & Abidi, S. M. R. (2018). Student
+     engagement predictions in an e-learning system and their implications
+     using neural network. (Hindawi).
+     https://doi.org/10.1155/2018/6347186
+     Open-access (PMC): https://pmc.ncbi.nlm.nih.gov/articles/PMC6189675/
+
+[14b] Hussain, S., & Khan, M. Q. (2022). Early prediction of student engagement
+     in virtual learning environments using machine learning techniques.
+     International Journal of Artificial Intelligence in Education / Springer.
+     https://doi.org/10.1007/s40593-021-00256-0
+
+[15] Jovanović, J., Gašević, D., Dawson, S., Pardo, A., & Mirriahi, N. (2017).
+     Learning analytics to unveil learning strategies in a flipped classroom.
+     Internet and Higher Education, 33, 74–85.
+     https://doi.org/10.18608/jla.2017.42.10
+
+[15B] Anonymous (2025). Learning management system log analytics: The role of
+     persistence and consistency of engagement behaviour on academic success.
+     ResearchGate working paper.
+     https://www.researchgate.net/publication/389876983
+
+[16] Macfadyen, L. P., & Dawson, S. (2010). Mining LMS data to develop an
+     "early warning system" for educators: A proof of concept. Computers &
+     Education, 54(2), 588–599.
+     https://doi.org/10.1016/j.compedu.2009.09.008
+
+[16k] Kuzilek, J., Hlosta, M., & Zdrahal, Z. (2017). Open University Learning
+     Analytics dataset. Scientific Data, 4, 170171.
+     https://doi.org/10.1038/sdata.2017.171
+     Open-access (PMC): https://pmc.ncbi.nlm.nih.gov/articles/PMC5704676/
+
+[17] Martin, A. J., & Marsh, H. W. (2008). Academic buoyancy: Towards an
+     understanding of students' everyday academic resilience. Journal of School
+     Psychology, 46(1), 53–83.
+     https://doi.org/10.1016/j.jsp.2008.05.001
+
+[18] Kloft, M., Stiehler, F., Zheng, Z., & Pinkwart, N. (2014). Predicting MOOC
+     dropout over weeks using machine learning methods. In Proceedings of the
+     EMNLP 2014 Workshop on Analysis of Large Scale Social Interaction in MOOCs
+     (pp. 60–65). ACL.
+     https://doi.org/10.3115/v1/W14-4111
+     Open-access (ACL Anthology): https://aclanthology.org/W14-4111/
+
+[19] Anonymous (2024). Exploring the link between motivational regulation and
+     learning design with learning analytics: A systematic literature review.
+     Journal of Learning Analytics, article 8469.
+     https://learning-analytics.info/index.php/JLA/article/download/8469/7861/44149
+
+[20] Ouyang, F., Wu, M., Zheng, L., Zhang, L., & Jiao, P. (2022). Predicting
+     students' performance in e-learning using learning process and behaviour
+     data. Scientific Reports, 12, 453.
+     https://doi.org/10.1038/s41598-021-03867-8
+     Open-access (Nature): https://www.nature.com/articles/s41598-021-03867-8
+
+[21] Anonymous (2022). Motivation for MOOC learning persistence: An expectancy–
+     value theory perspective. (PMC9426658).
+     https://pmc.ncbi.nlm.nih.gov/articles/PMC9426658/
+
+[21b] Anonymous (2018). Student engagement predictions in an e-learning system
+     and their implications. (PMC6189675).
+     https://pmc.ncbi.nlm.nih.gov/articles/PMC6189675/
+
+[22] Pintrich, P. R. (2004). A conceptual framework for assessing motivation
+     and self-regulated learning in college students. Educational Psychology
+     Review, 16(4), 385–407.
+     https://doi.org/10.1023/B:EDPR.0000034022.16470.f3
+
+[22B] Anonymous (2024). Predictive modelling with the Open University Learning
+     Analytics Dataset (OULAD): A systematic literature review. ResearchGate.
+     https://www.researchgate.net/publication/381904274
+
+[23] Riazy, S., Simbeck, K., & Schreck, V. (2020). Fairness in learning
+     analytics: Student at-risk prediction in virtual learning environments. In
+     Proceedings of CSEDU 2020 (Vol. 1, pp. 15–25). SCITEPRESS.
+     https://doi.org/10.5220/0009324100150025
+     Open-access (PDF): https://www.scitepress.org/Papers/2020/93241/93241.pdf
+
+[24] Romero, C., López, M.-I., Luna, J.-M., & Ventura, S. (2013). Predicting
+     students' final performance from participation in on-line discussion
+     forums. Computers & Education, 68, 458–472.
+     https://doi.org/10.1016/j.compedu.2012.10.023
+
+[25] Ryan, R. M., & Deci, E. L. (2000). Self-determination theory and the
+     facilitation of intrinsic motivation, social development, and well-being.
+     American Psychologist, 55(1), 68–78.
+     https://doi.org/10.1037/0003-066X.55.1.68
+
+[26] [Reservado — Self-Determination Theory landing page (general):
+     https://selfdeterminationtheory.org/theory/]
+
+[27] Saqr, M., Fors, U., & Tedre, M. (2017). How the study of online
+     collaborative learning can guide teachers and predict students'
+     performance in a medical course. BMC Medical Education, 17, 81.
+     https://doi.org/10.1186/s12909-017-0901-8
+     Open-access (BMC): https://bmcmededuc.biomedcentral.com/articles/10.1186/s12909-017-0901-8
+
+[28] Saqr, M., & López-Pernas, S. (2021). Time series clustering of online
+     learning trajectories: Engagement patterns and academic achievement.
+     International Journal of Educational Technology in Higher Education, 18, 23.
+     https://doi.org/10.1186/s41239-021-00277-8
+     Open-access (Springer Open): https://educationaltechnologyjournal.springeropen.com/articles/10.1186/s41239-021-00277-8
+
+[29] Steel, P. (2007). The nature of procrastination: A meta-analytic and
+     theoretical review of quintessential self-regulatory failure.
+     Psychological Bulletin, 133(1), 65–94.
+     https://doi.org/10.1037/0033-2909.133.1.65
+
+[30] Tuckman, B. W. (2005). Relations of academic procrastination,
+     rationalizations, and performance in a web course with deadlines.
+     Psychological Reports, 96(4), 1015–1021.
+     https://doi.org/10.2466/pr0.96.4.1015-1021
+
+[31] Anonymous (2024). Using motivation theory to design equity-focused
+     learning analytics dashboards. (MDPI 2/2/15).
+     https://www.mdpi.com/2813-4346/2/2/15
+
+[32] Wolff, A., Zdrahal, Z., Nikolov, A., & Pantucek, M. (2013). Improving
+     retention: Predicting at-risk students by analysing clicking behaviour in
+     a virtual learning environment. In Proceedings of the Third International
+     Conference on Learning Analytics and Knowledge (LAK '13) (pp. 145–149).
+     ACM.
+     https://doi.org/10.1145/2460296.2460324
+
+[33] Wigfield, A., & Eccles, J. S. (2000). Expectancy-value theory of
+     achievement motivation. Contemporary Educational Psychology, 25(1), 68–81.
+     https://doi.org/10.1006/ceps.1999.1015
+
+[34] You, J. W. (2016). Identifying significant indicators using LMS data to
+     predict course achievement in online learning. Internet and Higher
+     Education, 29, 23–30.
+     https://doi.org/10.1016/j.iheduc.2015.11.003
+
+[35] You, J. W. (2015). Examining the effect of academic procrastination on
+     achievement using LMS data in e-learning. Educational Technology &
+     Society, 18(3), 64–74.
+     https://www.j-ets.net/collection/published-issues/18_3
+
+[36] Zimmerman, B. J. (2000). Self-efficacy: An essential motive to learn.
+     Contemporary Educational Psychology, 25(1), 82–91.
+     https://doi.org/10.1006/ceps.1999.1016
+
+[37] Anonymous (2022). Week-wise student performance early prediction in
+     virtual learning environment using a deep explainable artificial
+     intelligence. Applied Sciences, 12(4), 1885.
+     https://www.mdpi.com/2076-3417/12/4/1885
+
+[37C] Anonymous (2024). Course success prediction and early identification of
+     at-risk students using explainable artificial intelligence. Electronics,
+     13(21), 4157.
+     https://www.mdpi.com/2079-9292/13/21/4157
+
+[37I] Anonymous (2022). Incorporating explainable learning analytics to assist
+     educators with identifying students in need of attention. ResearchGate.
+     https://www.researchgate.net/publication/361013721
+
+=================================================================================
+NOTAS FINALES
+=================================================================================
+- Las referencias marcadas como "Anonymous" son las que aparecen en el .docx
+  "Señales de Fracaso Académico y Motivación.docx" sin atribución autoral
+  explícita y/o como anclas de URL. Para envío editorial conviene resolver
+  autoría y volumen abriendo cada enlace.
+- Las referencias [1], [10], [11], [13H], [16k], [20], [23], [24], [27], [28],
+  [32] son las más fuertes para sustentar empíricamente las variables OULAD;
+  el resto (especialmente [25], [33], [6], [22], [13], [2], [29], [17], [3])
+  aporta el anclaje teórico SDT/EVT/SRL/resiliencia.
+- Faltan por verificar autoría/volumen exacto de las entradas marcadas
+  "Anonymous". Si pasas el .bib o BibTeX correspondiente puedo cerrar las
+  referencias 15B, 19, 21, 21b, 22B, 31, 37, 37C, 37I y 35.

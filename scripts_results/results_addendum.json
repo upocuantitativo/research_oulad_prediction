@@ -1,0 +1,221 @@
+{
+  "leakage_dropped": [
+    "mean_submit_delay",
+    "date_unregistration",
+    "withdrew",
+    "final_result",
+    "outcome_ordinal",
+    "mean_score",
+    "median_score",
+    "std_score",
+    "min_score",
+    "max_score",
+    "mean_score_TMA",
+    "mean_score_CMA",
+    "mean_score_Exam"
+  ],
+  "features_kept": [
+    "n_submissions",
+    "n_banked",
+    "total_clicks",
+    "prop_active_weeks",
+    "consistency_inv_cv",
+    "resource_entropy",
+    "n_activity_types",
+    "on_time_rate",
+    "mean_lead_days",
+    "n_assess",
+    "D1_engagement",
+    "D2_diversity",
+    "D3_timeliness",
+    "D4_persistence",
+    "MPI",
+    "num_of_prev_attempts",
+    "studied_credits",
+    "age_midpoint",
+    "education_level",
+    "imd_numeric"
+  ],
+  "leakage_safe_RF_perf": {
+    "acc": 0.9152,
+    "f1": 0.9152,
+    "auc": 0.9691
+  },
+  "shap_ok": true,
+  "table3_top10": [
+    {
+      "feature": "prop_active_weeks",
+      "family": "behavioural",
+      "perm_importance": 0.08916,
+      "perm_sd": 0.00353,
+      "mean_abs_shap": 0.13243
+    },
+    {
+      "feature": "n_submissions",
+      "family": "behavioural",
+      "perm_importance": 0.03729,
+      "perm_sd": 0.00185,
+      "mean_abs_shap": 0.07136
+    },
+    {
+      "feature": "n_assess",
+      "family": "behavioural",
+      "perm_importance": 0.01603,
+      "perm_sd": 0.00174,
+      "mean_abs_shap": 0.07912
+    },
+    {
+      "feature": "on_time_rate",
+      "family": "behavioural",
+      "perm_importance": 0.00421,
+      "perm_sd": 0.00067,
+      "mean_abs_shap": 0.0234
+    },
+    {
+      "feature": "mean_lead_days",
+      "family": "behavioural",
+      "perm_importance": 0.00378,
+      "perm_sd": 0.00067,
+      "mean_abs_shap": 0.02117
+    },
+    {
+      "feature": "n_activity_types",
+      "family": "behavioural",
+      "perm_importance": 0.0032,
+      "perm_sd": 0.00097,
+      "mean_abs_shap": 0.01191
+    },
+    {
+      "feature": "total_clicks",
+      "family": "behavioural",
+      "perm_importance": 0.00288,
+      "perm_sd": 0.00122,
+      "mean_abs_shap": 0.04347
+    },
+    {
+      "feature": "D4_persistence",
+      "family": "MPI",
+      "perm_importance": 0.00281,
+      "perm_sd": 0.00092,
+      "mean_abs_shap": 0.02199
+    },
+    {
+      "feature": "D3_timeliness",
+      "family": "MPI",
+      "perm_importance": 0.00194,
+      "perm_sd": 0.00119,
+      "mean_abs_shap": 0.01923
+    },
+    {
+      "feature": "MPI",
+      "family": "MPI",
+      "perm_importance": 0.00052,
+      "perm_sd": 0.00042,
+      "mean_abs_shap": 0.00465
+    }
+  ],
+  "D1_rank_perm": 20,
+  "top10_family_counts": {
+    "behavioural": 7,
+    "MPI": 3,
+    "demographic": 0
+  },
+  "top_feature": "prop_active_weeks",
+  "top_feature_family": "behavioural",
+  "fairness_disability": {
+    "disadvantaged": {
+      "n": 794,
+      "selection_rate": 0.4395,
+      "TPR_pass": 0.9644,
+      "FPR_pass": 0.1052,
+      "PPV_pass": 0.8539,
+      "failure_class_recall": 0.8948
+    },
+    "advantaged": {
+      "n": 7355,
+      "selection_rate": 0.5182,
+      "TPR_pass": 0.9497,
+      "FPR_pass": 0.1182,
+      "PPV_pass": 0.8817,
+      "failure_class_recall": 0.8818
+    },
+    "demographic_parity_diff": 0.0787,
+    "equal_opportunity_dTPR": -0.0147,
+    "dFPR": 0.013,
+    "equalized_odds_gap": 0.0147
+  },
+  "fairness_prevattempts": {
+    "disadvantaged": {
+      "n": 1051,
+      "selection_rate": 0.3473,
+      "TPR_pass": 0.8804,
+      "FPR_pass": 0.1076,
+      "PPV_pass": 0.7863,
+      "failure_class_recall": 0.8924
+    },
+    "advantaged": {
+      "n": 7098,
+      "selection_rate": 0.5347,
+      "TPR_pass": 0.9574,
+      "FPR_pass": 0.1185,
+      "PPV_pass": 0.8883,
+      "failure_class_recall": 0.8815
+    },
+    "demographic_parity_diff": 0.1874,
+    "equal_opportunity_dTPR": 0.077,
+    "dFPR": 0.0109,
+    "equalized_odds_gap": 0.077
+  },
+  "mpi_cv_significance": {
+    "n_folds": 25,
+    "auc_without_mpi": {
+      "mean": 0.9358,
+      "sd": 0.0029
+    },
+    "auc_with_mpi": {
+      "mean": 0.949,
+      "sd": 0.0026
+    },
+    "mean_delta": 0.0132,
+    "paired_t": 101.079,
+    "p_value": 4.4277411754727515e-33,
+    "boot95_CI_delta": [
+      0.0129,
+      0.0134
+    ],
+    "reliable": true
+  },
+  "mitigation_prevattempts": {
+    "method": "compound (prev_attempts x class) reweighting on leakage-safe RF",
+    "before": {
+      "dTPR": 0.077,
+      "dFPR": 0.0109,
+      "eo_gap": 0.077,
+      "dp_diff": 0.1874
+    },
+    "after": {
+      "dTPR": 0.0715,
+      "dFPR": 0.011,
+      "eo_gap": 0.0715,
+      "dp_diff": 0.1853
+    },
+    "acc_before": 0.9152,
+    "acc_after": 0.9142,
+    "auc_before": 0.9691,
+    "auc_after": 0.9686
+  },
+  "D2_by_domain": {
+    "STEM": {
+      "n": 21313,
+      "r_D2_passed": -0.1326
+    },
+    "Social": {
+      "n": 7250,
+      "r_D2_passed": -0.1503
+    },
+    "pooled": {
+      "n": 28563,
+      "r_D2_passed": -0.1396
+    }
+  }
+}
