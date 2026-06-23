@@ -59,7 +59,7 @@ def main(src, dst):
             if caption:
                 cp = doc.add_paragraph(); cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 cr = cp.add_run(caption); cr.italic = True; cr.font.size = Pt(9.5)
-                cr.font.color.rgb = RGBColor(0x44, 0x44, 0x44)
+                cr.font.color.rgb = RED
             i += 1; continue
         # red callout block:  :::red ... :::
         if ln.strip().lower() == ':::red':
