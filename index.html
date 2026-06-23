@@ -3,117 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OULAD MPI · Decision-Support Dashboard</title>
-<meta name="description" content="Interactive decision-support tool for fairness-aware, explainable early prediction of academic failure (OULAD, Motivation Proxy Index).">
+<title>OULAD MPI · Decision-Support Companion</title>
+<meta name="description" content="Interactive decision-support companion for fairness-aware, explainable early prediction of academic failure (OULAD, Motivation Proxy Index).">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css">
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 <script src="data.js"></script>
 <style>
 :root{
-  --bg:#f6f8fc; --bg2:#eef2fb; --card:#ffffff; --ink:#0f172a; --muted:#5b6678;
-  --line:#e6ebf3; --accent:#2563eb; --accent2:#7c3aed; --good:#059669; --warn:#d97706; --bad:#dc2626;
-  --shadow:0 10px 30px rgba(15,23,42,.08); --radius:18px;
-}
-html[data-theme="dark"]{
-  --bg:#0b1020; --bg2:#0e1530; --card:#121a33; --ink:#eaf0ff; --muted:#9aa7c2;
-  --line:#21304f; --accent:#5b8cff; --accent2:#a78bfa; --good:#34d399; --warn:#fbbf24; --bad:#f87171;
-  --shadow:0 14px 40px rgba(0,0,0,.45);
+  --serif:"Computer Modern Serif","Latin Modern Roman",Georgia,"Times New Roman",serif;
+  --sans:"Computer Modern Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"Computer Modern Typewriter",ui-monospace,Menlo,monospace;
+  --bg:#ffffff; --bg2:#fbfbf9; --card:#ffffff; --ink:#1a1a1a; --muted:#56564e;
+  --line:#dcdcd4; --line-dk:#33332e;
+  --accent:#8a1a18; --accent2:#1f3b73;          /* maroon (primary), navy */
+  --navy:#1f3b73; --maroon:#8a1a18; --teal:#2a6f6f; --ochre:#9c6b1f; --gray:#7a7a72;
+  --good:#2a6f6f; --warn:#9c6b1f; --bad:#8a1a18; /* muted semantic */
+  --radius:4px;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
-  color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
-a{color:var(--accent);text-decoration:none}
-.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+body{margin:0;font-family:var(--serif);color:var(--ink);background:var(--bg);
+  font-size:18px;line-height:1.6;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+a{color:#1a4d8c}
+.wrap{max-width:880px;margin:0 auto;padding:0 26px}
 
-/* ---------- HERO ---------- */
-.hero{position:relative;overflow:hidden;padding:74px 0 40px;
-  background:
-    radial-gradient(60% 90% at 12% 0%, rgba(124,58,237,.20), transparent 60%),
-    radial-gradient(55% 85% at 90% 10%, rgba(37,99,235,.22), transparent 62%),
-    radial-gradient(50% 70% at 60% 100%, rgba(5,150,105,.16), transparent 60%),
-    var(--bg2);
-}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent,var(--bg));pointer-events:none}
-.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:.78rem;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);
-  padding:6px 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent)}
-h1.title{font-size:clamp(1.9rem,4.6vw,3.05rem);line-height:1.08;margin:.5em 0 .35em;letter-spacing:-.02em;font-weight:800}
-.title .g{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.lede{font-size:1.08rem;color:var(--muted);max-width:760px;margin:0}
-.hero-cta{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:12px;font-weight:600;
-  border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;box-shadow:var(--shadow);transition:transform .15s}
-.btn:hover{transform:translateY(-2px)}
-.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border:0}
+/* ---------- NAV (sans chrome) ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:46px;font-family:var(--sans)}
+.nav .brand{font-weight:700;letter-spacing:.05em;font-size:.92rem}
+.nav .brand span{color:var(--maroon)}
+.nav .links{display:flex;gap:14px;margin-left:auto;flex-wrap:wrap}
+.nav a.link{color:var(--muted);font-size:.82rem;text-decoration:none}
+.nav a.link:hover{color:var(--ink)}
+
+/* ---------- HERO (sober paper masthead) ---------- */
+.hero{background:var(--bg2);border-bottom:1px solid var(--line);padding:48px 0 34px}
+.eyebrow{display:inline-block;font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--maroon);border:1px solid var(--line);padding:4px 11px;border-radius:2px;background:#fff}
+h1.title{font-size:clamp(1.7rem,3.6vw,2.5rem);line-height:1.18;margin:.45em 0 .3em;font-weight:700;letter-spacing:.01em}
+.title .g{color:var(--maroon)}
+.lede{font-size:1rem;color:var(--muted);max-width:760px;margin:0;text-align:justify;hyphens:auto}
+.hero-cta{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;font-family:var(--sans)}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:var(--radius);font-size:.84rem;font-weight:600;
+  border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--maroon);color:var(--maroon)}
+.btn.primary{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.btn.primary:hover{background:#6f1513;color:#fff}
 
 /* ---------- KPIs ---------- */
-.kpis{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
-.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 18px;box-shadow:var(--shadow)}
-.kpi .v{font-size:2.05rem;font-weight:800;letter-spacing:-.02em}
-.kpi .l{color:var(--muted);font-size:.86rem;margin-top:2px}
-.kpi .s{font-size:.78rem;color:var(--accent);font-weight:600;margin-top:8px}
-
-/* ---------- NAV ---------- */
-.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
-  background:color-mix(in srgb,var(--bg) 80%,transparent);border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;align-items:center;gap:18px;height:56px}
-.nav .brand{font-weight:800;letter-spacing:-.01em}
-.nav .links{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
-.nav a.link{color:var(--muted);font-weight:600;font-size:.9rem;padding:7px 11px;border-radius:9px}
-.nav a.link:hover{color:var(--ink);background:var(--bg2)}
-.toggle{margin-left:8px;width:42px;height:42px;border-radius:11px;border:1px solid var(--line);background:var(--card);
-  cursor:pointer;font-size:1.1rem;display:grid;place-items:center}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:30px;
+  border:1px solid var(--line-dk);background:#fff}
+.kpi{padding:16px 18px;border-right:1px solid var(--line)}
+.kpi:last-child{border-right:0}
+.kpi .v{font-size:1.7rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.kpi .l{color:var(--ink);font-size:.82rem;margin-top:3px}
+.kpi .s{font-family:var(--sans);font-size:.72rem;color:var(--muted);margin-top:6px}
 
 /* ---------- SECTIONS ---------- */
-section{padding:54px 0;border-top:1px solid var(--line)}
-.sec-head{max-width:780px;margin-bottom:26px}
-.sec-tag{font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2)}
-.sec-head h2{font-size:clamp(1.5rem,3vw,2.1rem);margin:.25em 0 .35em;letter-spacing:-.02em;font-weight:800}
-.sec-head p{color:var(--muted);margin:0;font-size:1.02rem}
+section{padding:40px 0;border-top:1px solid var(--line);scroll-margin-top:54px}
+.sec-head{max-width:780px;margin-bottom:22px}
+.sec-tag{font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon)}
+.sec-head h2{font-size:clamp(1.35rem,2.6vw,1.7rem);margin:.25em 0 .35em;font-weight:700}
+.sec-head p{color:var(--ink);margin:0;font-size:1rem;text-align:justify;hyphens:auto}
 
-.grid{display:grid;gap:20px}
+.grid{display:grid;gap:18px}
 .g-2{grid-template-columns:1.55fr 1fr}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
-.card h3{margin:.1em 0 .5em;font-size:1.05rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.card h3{margin:.1em 0 .5em;font-size:1.05rem;font-weight:700}
 .chart{width:100%;height:380px}
 .aside{display:flex;flex-direction:column;gap:14px}
-.readout{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 8%,var(--card)),var(--card));
-  border:1px solid var(--line);border-radius:14px;padding:18px}
-.readout .big{font-size:2.5rem;font-weight:800;letter-spacing:-.02em;line-height:1}
-.badge{display:inline-block;padding:5px 12px;border-radius:999px;font-weight:700;font-size:.82rem;margin-top:8px}
-.b-low{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
-.b-mid{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
-.b-high{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
-.action{font-size:.95rem;color:var(--ink)}
-.action b{color:var(--accent)}
 
-/* controls */
-.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:6px}
-.seg{display:inline-flex;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:4px}
-.seg button{border:0;background:transparent;color:var(--muted);font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;font-size:.9rem}
-.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.chk{display:inline-flex;gap:7px;align-items:center;font-size:.88rem;color:var(--muted);cursor:pointer;user-select:none;
-  border:1px solid var(--line);padding:6px 11px;border-radius:999px}
-.chk input{accent-color:var(--accent)}
-input[type=range]{width:100%;accent-color:var(--accent);height:6px}
-.slider-wrap{margin:6px 0 2px}
-.wk{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;margin-top:4px}
+/* readout inset (Box) */
+.readout{background:#faf7f3;border:1px solid var(--line);border-left:3px solid var(--maroon);border-radius:var(--radius);padding:15px 16px}
+.readout .big{font-size:2.1rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.badge{display:inline-block;font-family:var(--sans);padding:3px 10px;border:1px solid currentColor;border-radius:2px;
+  font-weight:600;font-size:.76rem;margin-top:8px}
+.b-low{color:var(--bad)} .b-mid{color:var(--warn)} .b-high{color:var(--good)}
+.action{font-size:.92rem;color:var(--ink)}
+.action b{color:var(--maroon)}
+.note{font-size:.84rem;color:var(--muted);text-align:justify}
 
-.kv{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+/* controls (minimal academic) */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px;
+  font-family:var(--sans);font-size:.82rem;color:var(--muted);padding-bottom:9px;border-bottom:1px dotted var(--line)}
+.seg{display:inline-flex;gap:4px}
+.seg button{font-family:var(--sans);font-size:.82rem;border:0;background:none;color:#1a4d8c;cursor:pointer;
+  padding:2px 4px;border-bottom:2px solid transparent}
+.seg button:hover{color:var(--maroon)}
+.seg button.on{color:var(--ink);font-weight:700;border-bottom-color:var(--maroon);cursor:default}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:.84rem;color:var(--ink);cursor:pointer;user-select:none;font-family:var(--sans)}
+.chk input{accent-color:var(--maroon)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--line-dk);border-radius:2px;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--maroon);border:2px solid #fff;box-shadow:0 0 0 1px var(--maroon)}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--maroon);border:2px solid #fff}
+.slider-wrap{margin:4px 0 8px}
+.wk{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;margin-top:4px;font-family:var(--sans)}
+
+.kv{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dotted var(--line);font-size:.92rem}
 .kv:last-child{border-bottom:0}
-.kv .m{color:var(--muted)} .kv .n{font-weight:700}
-.note{font-size:.82rem;color:var(--muted)}
+.kv .m{color:var(--muted)} .kv .n{font-weight:700;font-variant-numeric:tabular-nums}
 .mini{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{background:var(--bg2);border-radius:12px;padding:13px}
-.stat .v{font-size:1.5rem;font-weight:800} .stat .l{font-size:.78rem;color:var(--muted)}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.stat .v{font-size:1.4rem;font-weight:700;font-variant-numeric:tabular-nums} .stat .l{font-size:.76rem;color:var(--muted);font-family:var(--sans)}
 .delta-up{color:var(--good)} .delta-dn{color:var(--bad)}
 
-footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
-footer a{font-weight:600}
+figcaption,.figcap{font-size:.86rem;color:var(--ink);margin-top:10px;text-align:justify;line-height:1.5}
+
+footer{padding:26px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:.86rem;font-family:var(--sans)}
 .foot-grid{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between}
+footer a{color:#1a4d8c}
 
 @media(max-width:880px){
   .kpis{grid-template-columns:repeat(2,1fr)}
+  .kpi:nth-child(2){border-right:0}.kpi:nth-child(1),.kpi:nth-child(2){border-bottom:1px solid var(--line)}
   .g-2{grid-template-columns:1fr}
   .nav .links{display:none}
 }
@@ -123,7 +126,7 @@ footer a{font-weight:600}
 
 <!-- NAV -->
 <div class="nav"><div class="wrap">
-  <span class="brand">OULAD&nbsp;<span style="color:var(--accent2)">MPI</span></span>
+  <span class="brand">OULAD&nbsp;<span>MPI</span></span>
   <nav class="links">
     <a class="link" href="#simulator">Early warning</a>
     <a class="link" href="#drivers">Risk drivers</a>
@@ -131,28 +134,27 @@ footer a{font-weight:600}
     <a class="link" href="#fairness">Fairness</a>
     <a class="link" href="#outcomes">Outcomes</a>
   </nav>
-  <button class="toggle" id="themeBtn" title="Toggle light / dark">🌙</button>
 </div></div>
 
 <!-- HERO -->
 <header class="hero"><div class="wrap">
-  <span class="eyebrow">● Decision-support dashboard · OULAD</span>
-  <h1 class="title">Spot academic risk early —<br><span class="g">act fairly, and know why</span></h1>
+  <span class="eyebrow">Decision-support companion · OULAD</span>
+  <h1 class="title">Spot academic risk early — <span class="g">act fairly, and know why</span></h1>
   <p class="lede">An interactive companion to the study <i>“A Theory-Grounded Motivation Proxy Index for Fairness-Aware
   and Explainable Early Prediction of Academic Failure in Online Higher Education.”</i> Explore when a student can be
   reliably flagged, what drives the flag, the motivational profile behind it, and the equity trade-offs — all from real
   results on 32,593 enrolments. Everything runs in your browser; no data leaves this device.</p>
   <div class="hero-cta">
-    <a class="btn primary" href="#simulator">▶ Open the early-warning simulator</a>
-    <a class="btn" href="Manuscrito_MPI_OULAD.docx">📄 Read the manuscript</a>
-    <a class="btn" href="https://github.com/upocuantitativo/research_oulad_prediction" target="_blank" rel="noopener">⌥ Code & data</a>
+    <a class="btn primary" href="#simulator">Open the early-warning simulator</a>
+    <a class="btn" href="Manuscrito_MPI_OULAD.docx">Read the manuscript (.docx)</a>
+    <a class="btn" href="https://github.com/upocuantitativo/research_oulad_prediction" target="_blank" rel="noopener">Code &amp; data</a>
   </div>
 
   <div class="kpis" id="kpis">
-    <div class="kpi"><div class="v" data-count="32593" data-suffix="">0</div><div class="l">Student enrolments</div><div class="s">22 module-presentations</div></div>
+    <div class="kpi"><div class="v" data-count="32593">0</div><div class="l">Student enrolments</div><div class="s">22 module-presentations</div></div>
     <div class="kpi"><div class="v" data-count="52.8" data-dec="1" data-suffix="%">0</div><div class="l">End in failure or withdrawal</div><div class="s">the cost of acting late</div></div>
-    <div class="kpi"><div class="v" data-count="0.969" data-dec="3" data-suffix="">0</div><div class="l">ROC-AUC, leakage-safe model</div><div class="s">real signal, not restated grades</div></div>
-    <div class="kpi"><div class="v" data-count="20" data-suffix="" data-prefix="Wk ">0</div><div class="l">First high-confidence week</div><div class="s">usable triage already by week 16</div></div>
+    <div class="kpi"><div class="v" data-count="0.969" data-dec="3">0</div><div class="l">ROC-AUC, leakage-safe model</div><div class="s">real signal, not restated grades</div></div>
+    <div class="kpi"><div class="v" data-count="20" data-prefix="Wk&nbsp;">0</div><div class="l">First high-confidence week</div><div class="s">usable triage already by week 16</div></div>
   </div>
 </div></header>
 
@@ -169,19 +171,20 @@ footer a{font-weight:600}
   <div class="grid g-2">
     <div class="card">
       <div class="slider-wrap">
-        <input type="range" id="weekSlider" min="0" max="7" step="1" value="4">
+        <input type="range" id="weekSlider" min="0" max="7" step="1" value="3">
         <div class="wk"><span>Week 4</span><span>8</span><span>12</span><span>16</span><span>20</span><span>24</span><span>28</span><span>Week 32</span></div>
       </div>
       <div id="earlyChart" class="chart"></div>
+      <div class="figcap"><b>Figure 1.</b> Leakage-safe early-warning ROC-AUC by course week (cumulative behaviour only; n = 28,497).</div>
     </div>
     <div class="aside">
       <div class="readout">
-        <div class="note">Model confidence at <b id="roWeek">week 16</b></div>
-        <div class="big" id="roAuc">0.87</div>
+        <div class="note" style="margin-bottom:4px">Model confidence at <b id="roWeek">week 16</b></div>
+        <div class="big" id="roAuc">0.871</div>
         <div class="badge b-mid" id="roBadge">Usable triage</div>
         <p class="action" id="roAction" style="margin:.7em 0 0"></p>
       </div>
-      <div class="card" style="box-shadow:none;padding:16px">
+      <div class="card" style="padding:14px 16px">
         <div class="kv"><span class="m">Discrimination (ROC-AUC)</span><span class="n" id="kAuc">0.871</span></div>
         <div class="kv"><span class="m">Confidence tier</span><span class="n" id="kTier">Usable</span></div>
         <div class="kv"><span class="m">Cohort analysed</span><span class="n">28,497</span></div>
@@ -201,23 +204,24 @@ footer a{font-weight:600}
   </div>
   <div class="grid g-2">
     <div class="card">
-      <div class="controls"><div class="seg" id="impSeg">
-        <button class="on" data-k="shap">Mean |SHAP|</button>
-        <button data-k="perm">Permutation</button>
+      <div class="controls">Importance measure:&nbsp;<div class="seg" id="impSeg">
+        <button class="on" data-k="shap">mean&nbsp;|SHAP|</button>
+        <button data-k="perm">permutation</button>
       </div></div>
-      <div id="driverChart" class="chart"></div>
+      <div id="driverChart" class="chart" style="height:430px"></div>
+      <div class="figcap"><b>Figure 2.</b> Leakage-safe drivers of course passing. Colour denotes feature family: behavioural (navy), MPI (maroon), demographic (grey).</div>
     </div>
     <div class="aside">
-      <div class="card" style="box-shadow:none">
+      <div class="card">
         <h3>Read it as</h3>
         <p class="note" style="font-size:.95rem;line-height:1.6">
         The strongest driver is the <b>proportion of active course weeks</b> — a pure engagement signal — followed by
-        assessment and submission activity. The three Motivation Proxy Index dimensions (purple) enter as
+        assessment and submission activity. The three Motivation Proxy Index dimensions enter as
         <i>incremental, interpretable</i> contributors. Removing leakage barely dents performance (AUC 0.983 → 0.969),
         confirming the model learns behaviour, not a restated grade.</p>
         <div class="mini" style="margin-top:6px">
-          <div class="stat"><div class="v" style="color:var(--accent)">7 / 10</div><div class="l">top features are behavioural</div></div>
-          <div class="stat"><div class="v" style="color:var(--accent2)">3 / 10</div><div class="l">are MPI motivation dimensions</div></div>
+          <div class="stat"><div class="v" style="color:var(--navy)">7 / 10</div><div class="l">top features are behavioural</div></div>
+          <div class="stat"><div class="v" style="color:var(--maroon)">3 / 10</div><div class="l">are MPI motivation dimensions</div></div>
         </div>
       </div>
     </div>
@@ -234,11 +238,12 @@ footer a{font-weight:600}
   </div>
   <div class="grid g-2">
     <div class="card">
-      <div class="controls" id="mpiChecks"></div>
-      <div id="radarChart" class="chart"></div>
+      <div class="controls" id="mpiChecks">Show outcomes:&nbsp;</div>
+      <div id="radarChart" class="chart" style="height:420px"></div>
+      <div class="figcap"><b>Figure 3.</b> Motivation Proxy Index profile by final outcome (standardised dimension means).</div>
     </div>
     <div class="aside">
-      <div class="card" style="box-shadow:none">
+      <div class="card">
         <h3>Dimension validity (r with passing)</h3>
         <div class="kv"><span class="m">D1 Engagement</span><span class="n" style="color:var(--good)">+0.417 ✓</span></div>
         <div class="kv"><span class="m">D3 Timeliness</span><span class="n" style="color:var(--good)">+0.164 ✓</span></div>
@@ -261,14 +266,15 @@ footer a{font-weight:600}
   </div>
   <div class="grid g-2">
     <div class="card">
-      <div class="controls"><div class="seg" id="mitSeg">
-        <button class="on" data-k="before">Before mitigation</button>
-        <button data-k="after">After (group-aware threshold)</button>
+      <div class="controls">Decision threshold:&nbsp;<div class="seg" id="mitSeg">
+        <button class="on" data-k="before">standard (0.50)</button>
+        <button data-k="after">group-aware</button>
       </div></div>
-      <div id="fairChart" class="chart"></div>
+      <div id="fairChart" class="chart" style="height:360px"></div>
+      <div class="figcap"><b>Figure 4.</b> True-positive rate by prior-attempt group; the dashed connector marks the equal-opportunity gap.</div>
     </div>
     <div class="aside">
-      <div class="card" style="box-shadow:none">
+      <div class="card">
         <h3>Equal-opportunity gap (prior attempts)</h3>
         <div class="mini">
           <div class="stat"><div class="v" id="eoVal">0.077</div><div class="l">TPR gap (lower = fairer)</div></div>
@@ -294,7 +300,7 @@ footer a{font-weight:600}
   <div class="grid g-2">
     <div class="card"><h3>Final result distribution</h3><div id="donutChart" class="chart" style="height:340px"></div></div>
     <div class="card">
-      <div class="controls"><div class="seg" id="dispSeg"></div></div>
+      <div class="controls">Protected attribute:&nbsp;<div class="seg" id="dispSeg"></div></div>
       <div id="dispChart" class="chart" style="height:340px"></div>
     </div>
   </div>
@@ -303,7 +309,7 @@ footer a{font-weight:600}
 
 <footer><div class="wrap foot-grid">
   <div style="max-width:520px">
-    <b>OULAD MPI — decision-support dashboard.</b><br>
+    <b>OULAD MPI — decision-support companion.</b><br>
     Companion to a fairness-aware, explainable early-warning study on the Open University Learning Analytics Dataset
     (Kuzilek et al., 2017; CC-BY 4.0). All figures are real outputs of the reproducible pipeline (seed = 42).
   </div>

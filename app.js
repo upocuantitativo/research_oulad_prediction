@@ -1,59 +1,35 @@
-/* OULAD MPI decision-support dashboard — interactivity & charts (ECharts). */
+/* OULAD MPI decision-support companion — interactivity & charts (ECharts), academic skin. */
 (function () {
   "use strict";
   var D = window.DATA;
   var charts = {};
 
-  /* ---------- theme ---------- */
   function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
-  function palette(){
-    return {
-      ink: cssVar('--ink'), muted: cssVar('--muted'), line: cssVar('--line'),
-      accent: cssVar('--accent'), accent2: cssVar('--accent2'),
-      good: cssVar('--good'), warn: cssVar('--warn'), bad: cssVar('--bad'),
-      card: cssVar('--card')
-    };
-  }
-  var saved = localStorage.getItem('oulad-theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
-  function syncBtn(){ document.getElementById('themeBtn').textContent =
-    document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'; }
-  syncBtn();
-  document.getElementById('themeBtn').addEventListener('click', function(){
-    var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', cur);
-    localStorage.setItem('oulad-theme', cur); syncBtn();
-    setTimeout(renderAll, 60);
-  });
+  var P = {
+    ink:cssVar('--ink'), muted:cssVar('--muted'), line:'#bdbdb4', grid:'#ececE4', card:cssVar('--card'),
+    navy:cssVar('--navy'), maroon:cssVar('--maroon'), teal:cssVar('--teal'), ochre:cssVar('--ochre'), gray:cssVar('--gray'),
+    good:cssVar('--good'), warn:cssVar('--warn'), bad:cssVar('--bad')
+  };
+  var SERIF = getComputedStyle(document.body).fontFamily || 'Georgia, serif';
 
-  /* ---------- KPI count-up ---------- */
-  function animateCount(el){
-    var target = parseFloat(el.dataset.count), dec = parseInt(el.dataset.dec || '0', 10);
-    var suf = el.dataset.suffix || '', pre = el.dataset.prefix || '', t0 = null, dur = 1300;
-    function step(ts){
-      if(!t0) t0 = ts; var p = Math.min((ts - t0)/dur, 1);
-      var e = 1 - Math.pow(1 - p, 3); // easeOutCubic
-      var val = target * e;
-      el.textContent = pre + (dec ? val.toFixed(dec) : Math.round(val).toLocaleString('en-US')) + suf;
-      if(p < 1) requestAnimationFrame(step);
-      else el.textContent = pre + (dec ? target.toFixed(dec) : target.toLocaleString('en-US')) + suf;
-    }
-    requestAnimationFrame(step);
-  }
-  var io = new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting){ animateCount(e.target); io.unobserve(e.target); } });
-  }, {threshold:.5});
-  document.querySelectorAll('[data-count]').forEach(function(el){ io.observe(el); });
+  /* ---------- static KPI values (academic: no count-up) ---------- */
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    var t = parseFloat(el.dataset.count), dec = parseInt(el.dataset.dec || '0', 10);
+    var suf = el.dataset.suffix || '', pre = el.dataset.prefix || '';
+    el.innerHTML = pre + (dec ? t.toFixed(dec) : t.toLocaleString('en-US')) + suf;
+  });
 
   function mk(id){ var c = echarts.init(document.getElementById(id)); charts[id] = c; return c; }
   var baseGrid = {left:8,right:18,top:24,bottom:8,containLabel:true};
-  function axisStyle(p){ return {
-    axisLine:{lineStyle:{color:p.line}}, axisTick:{show:false},
-    axisLabel:{color:p.muted}, splitLine:{lineStyle:{color:p.line,type:'dashed'}}
+  function root(opt){ opt.textStyle = {fontFamily:SERIF, color:P.ink}; return opt; }
+  function axisStyle(){ return {
+    axisLine:{lineStyle:{color:P.line}}, axisTick:{show:false},
+    axisLabel:{color:P.muted, fontFamily:SERIF}, nameTextStyle:{color:P.muted, fontFamily:SERIF},
+    splitLine:{lineStyle:{color:P.grid, type:'solid'}}
   };}
 
   /* ================= EARLY-WARNING ================= */
-  var selWeekIdx = 3; // start at week 16
+  var selWeekIdx = 3; // week 16
   function tier(auc){
     if(auc >= 0.90) return {t:'High confidence', cls:'b-high', tierTxt:'High',
       chan:'Escalate to human tutoring', act:'Confidence is high enough to commit scarce tutoring resources. <b>Prioritise flagged students for one-to-one outreach</b> and personalised study plans.'};
@@ -62,30 +38,28 @@
     return {t:'Too early', cls:'b-low', tierTxt:'Low',
       chan:'Automated nudges only', act:'Signal is still weak — flags are unreliable. <b>Use light-touch automated nudges only</b> and avoid costly interventions until more behaviour accrues.'};
   }
+  function tierColor(a){ return a>=0.90 ? P.teal : (a>=0.82 ? P.ochre : P.maroon); }
   function renderEarly(){
-    var p = palette(), c = charts.earlyChart || mk('earlyChart');
+    var c = charts.earlyChart || mk('earlyChart');
     var pts = D.early.weeks.map(function(w,i){
-      var a = D.early.auc[i];
-      var col = a>=0.90 ? p.good : (a>=0.82 ? p.warn : p.bad);
-      return {value:[w,a], itemStyle:{color: i===selWeekIdx ? p.accent2 : col,
-        borderColor:'#fff', borderWidth: i===selWeekIdx?3:1.5},
-        symbolSize: i===selWeekIdx ? 18 : 10};
+      var a = D.early.auc[i], sel = i===selWeekIdx;
+      return {value:[w,a], itemStyle:{color: sel ? P.maroon : tierColor(a), borderColor:'#fff', borderWidth: sel?2.5:1.2},
+        symbolSize: sel ? 16 : 9};
     });
-    c.setOption({
-      grid: baseGrid, animationDuration:600,
-      tooltip:{trigger:'axis', valueFormatter:function(v){return (+v).toFixed(3);}},
+    c.setOption(root({
+      grid: baseGrid, animationDuration:500,
+      tooltip:{trigger:'axis', textStyle:{fontFamily:SERIF}, valueFormatter:function(v){return (+v).toFixed(3);}},
       xAxis: Object.assign({type:'value', min:2, max:34, interval:4, name:'Course week',
-        nameLocation:'middle', nameGap:30, nameTextStyle:{color:p.muted}}, axisStyle(p)),
-      yAxis: Object.assign({type:'value', min:0.62, max:0.99, name:'ROC-AUC',
-        nameTextStyle:{color:p.muted}}, axisStyle(p)),
+        nameLocation:'middle', nameGap:30}, axisStyle()),
+      yAxis: Object.assign({type:'value', min:0.62, max:0.99, name:'ROC-AUC'}, axisStyle()),
       series:[
-        {type:'line', smooth:true, symbol:'none', lineStyle:{width:3,color:p.accent},
-         areaStyle:{color:'rgba(37,99,235,.10)'}, data:D.early.weeks.map(function(w,i){return [w,D.early.auc[i]];}), z:1},
+        {type:'line', smooth:false, symbol:'none', lineStyle:{width:1.8,color:P.navy},
+         areaStyle:{color:'rgba(31,59,115,.05)'}, data:D.early.weeks.map(function(w,i){return [w,D.early.auc[i]];}), z:1},
         {type:'scatter', data:pts, z:3,
-         markLine:{silent:true, symbol:'none', lineStyle:{color:p.good,type:'dashed'},
-           data:[{yAxis:0.90, label:{formatter:'high-confidence ≥ 0.90', color:p.good, position:'insideStartTop'}}]}}
+         markLine:{silent:true, symbol:'none', lineStyle:{color:P.teal,type:'dashed'},
+           data:[{yAxis:0.90, label:{formatter:'high-confidence ≥ 0.90', color:P.teal, fontFamily:SERIF, position:'insideStartTop'}}]}}
       ]
-    });
+    }));
   }
   function updateReadout(){
     var w = D.early.weeks[selWeekIdx], a = D.early.auc[selWeekIdx], info = tier(a);
@@ -104,20 +78,19 @@
   /* ================= DRIVERS ================= */
   var impKey = 'shap';
   function renderDrivers(){
-    var p = palette(), c = charts.driverChart || mk('driverChart');
-    var fam = {behavioural:p.accent, MPI:p.accent2, demographic:p.muted};
+    var c = charts.driverChart || mk('driverChart');
+    var fam = {behavioural:P.navy, MPI:P.maroon, demographic:P.gray};
     var rows = D.drivers.slice().sort(function(a,b){ return a[impKey]-b[impKey]; });
-    c.setOption({
-      grid: Object.assign({}, baseGrid, {left:8,right:40}), animationDuration:600,
-      tooltip:{trigger:'item', formatter:function(o){return o.name+'<br/><b>'+(+o.value).toFixed(4)+'</b> ('+rows[o.dataIndex].fam+')';}},
+    c.setOption(root({
+      grid: Object.assign({}, baseGrid, {left:8,right:46}), animationDuration:500,
+      tooltip:{trigger:'item', textStyle:{fontFamily:SERIF}, formatter:function(o){return o.name+'<br/><b>'+(+o.value).toFixed(4)+'</b> ('+rows[o.dataIndex].fam+')';}},
       xAxis: Object.assign({type:'value', name: impKey==='shap'?'mean |SHAP|':'permutation importance',
-        nameLocation:'middle', nameGap:28, nameTextStyle:{color:p.muted}}, axisStyle(p)),
-      yAxis: Object.assign({type:'category', data:rows.map(function(r){return r.f;})}, axisStyle(p),
-        {splitLine:{show:false}}),
-      series:[{type:'bar', data:rows.map(function(r){return {value:Math.max(r[impKey],0), itemStyle:{color:fam[r.fam], borderRadius:[0,6,6,0]}};}),
-        barWidth:'62%', label:{show:true, position:'right', color:p.muted,
+        nameLocation:'middle', nameGap:28}, axisStyle()),
+      yAxis: Object.assign({type:'category', data:rows.map(function(r){return r.f;})}, axisStyle(), {splitLine:{show:false}}),
+      series:[{type:'bar', data:rows.map(function(r){return {value:Math.max(r[impKey],0), itemStyle:{color:fam[r.fam]}};}),
+        barWidth:'58%', label:{show:true, position:'right', color:P.muted, fontFamily:SERIF,
           formatter:function(o){return (+o.value).toFixed(3);}}}]
-    });
+    }));
   }
   document.querySelectorAll('#impSeg button').forEach(function(btn){
     btn.addEventListener('click', function(){
@@ -128,7 +101,7 @@
 
   /* ================= MPI RADAR ================= */
   var mpiOn = {Distinction:true, Pass:true, Fail:true, Withdrawn:true};
-  var ocol = function(p){ return {Distinction:p.good, Pass:p.accent, Fail:p.warn, Withdrawn:p.bad}; };
+  var OCOL = {Distinction:P.navy, Pass:P.teal, Fail:P.ochre, Withdrawn:P.maroon};
   (function buildChecks(){
     var box = document.getElementById('mpiChecks');
     ['Distinction','Pass','Fail','Withdrawn'].forEach(function(o){
@@ -139,45 +112,44 @@
     });
   })();
   function renderRadar(){
-    var p = palette(), c = charts.radarChart || mk('radarChart'), col = ocol(p);
+    var c = charts.radarChart || mk('radarChart');
     var ind = D.mpi.dims.map(function(d){ return {name:d, max:0.42, min:-0.32}; });
-    var series = Object.keys(D.mpi.outcomes).filter(function(o){return mpiOn[o];}).map(function(o){
+    var keys = Object.keys(D.mpi.outcomes).filter(function(o){return mpiOn[o];});
+    var series = keys.map(function(o){
       return {value:D.mpi.outcomes[o], name:o,
-        lineStyle:{color:col[o],width:2.4}, itemStyle:{color:col[o]}, areaStyle:{color:col[o],opacity:.07}};
+        lineStyle:{color:OCOL[o],width:2}, itemStyle:{color:OCOL[o]}, areaStyle:{color:OCOL[o],opacity:.05}};
     });
-    c.setOption({
-      tooltip:{}, legend:{top:0, textStyle:{color:p.muted}, data:Object.keys(D.mpi.outcomes).filter(function(o){return mpiOn[o];})},
-      color:Object.keys(D.mpi.outcomes).filter(function(o){return mpiOn[o];}).map(function(o){return col[o];}),
+    c.setOption(root({
+      tooltip:{textStyle:{fontFamily:SERIF}}, legend:{top:0, textStyle:{color:P.muted, fontFamily:SERIF}, data:keys},
+      color:keys.map(function(o){return OCOL[o];}),
       radar:{indicator:ind, center:['50%','56%'], radius:'66%',
-        axisName:{color:p.ink, fontSize:12},
-        splitLine:{lineStyle:{color:p.line}}, splitArea:{areaStyle:{color:['transparent']}},
-        axisLine:{lineStyle:{color:p.line}}},
-      series:[{type:'radar', data:series, animationDuration:600}]
-    });
+        axisName:{color:P.ink, fontFamily:SERIF, fontSize:12},
+        splitLine:{lineStyle:{color:P.grid}}, splitArea:{areaStyle:{color:['transparent']}},
+        axisLine:{lineStyle:{color:P.grid}}},
+      series:[{type:'radar', data:series, animationDuration:500}]
+    }));
   }
 
   /* ================= FAIRNESS ================= */
   var mitKey = 'before';
   function renderFair(){
-    var p = palette(), c = charts.fairChart || mk('fairChart');
+    var c = charts.fairChart || mk('fairChart');
     var m = D.mitigation[mitKey];
     var groups = ['Prior attempts > 0','Prior attempts = 0'];
     var tpr = [m.tpr_dis, m.tpr_adv];
-    c.setOption({
-      grid: Object.assign({}, baseGrid, {top:34}), animationDuration:600,
-      tooltip:{trigger:'axis', valueFormatter:function(v){return (+v*100).toFixed(1)+'%';}},
-      legend:{show:false},
-      xAxis: Object.assign({type:'category', data:groups}, axisStyle(p)),
+    c.setOption(root({
+      grid: Object.assign({}, baseGrid, {top:34}), animationDuration:500,
+      tooltip:{trigger:'axis', textStyle:{fontFamily:SERIF}, valueFormatter:function(v){return (+v*100).toFixed(1)+'%';}},
+      xAxis: Object.assign({type:'category', data:groups}, axisStyle()),
       yAxis: Object.assign({type:'value', min:0.80, max:1.0, name:'True-positive rate (recall)',
-        nameTextStyle:{color:p.muted}, axisLabel:{color:p.muted, formatter:function(v){return Math.round(v*100)+'%';}}}, axisStyle(p)),
-      series:[{type:'bar', barWidth:'48%',
-        data:[{value:tpr[0], itemStyle:{color:p.warn,borderRadius:[8,8,0,0]}},
-              {value:tpr[1], itemStyle:{color:p.accent,borderRadius:[8,8,0,0]}}],
-        label:{show:true, position:'top', color:p.ink, formatter:function(o){return (o.value*100).toFixed(1)+'%';}},
-        markLine:{silent:true, symbol:'none', lineStyle:{color:p.bad, type:'dashed'},
-          label:{formatter:'gap '+ (m.eo).toFixed(3), color:p.bad},
+        axisLabel:{color:P.muted, fontFamily:SERIF, formatter:function(v){return Math.round(v*100)+'%';}}}, axisStyle()),
+      series:[{type:'bar', barWidth:'46%',
+        data:[{value:tpr[0], itemStyle:{color:P.ochre}}, {value:tpr[1], itemStyle:{color:P.navy}}],
+        label:{show:true, position:'top', color:P.ink, fontFamily:SERIF, formatter:function(o){return (o.value*100).toFixed(1)+'%';}},
+        markLine:{silent:true, symbol:'none', lineStyle:{color:P.maroon, type:'dashed'},
+          label:{formatter:'gap '+ (m.eo).toFixed(3), color:P.maroon, fontFamily:SERIF},
           data:[[{xAxis:0, yAxis:tpr[0]},{xAxis:1, yAxis:tpr[1]}]]}}]
-    });
+    }));
     document.getElementById('eoVal').textContent = m.eo.toFixed(3);
     document.getElementById('eoVal').className = 'v ' + (mitKey==='after'?'delta-up':'');
     document.getElementById('accVal').textContent = (mitKey==='before'?'91.5%':'91.3%');
@@ -194,19 +166,18 @@
 
   /* ================= OUTCOMES DONUT ================= */
   function renderDonut(){
-    var p = palette(), c = charts.donutChart || mk('donutChart');
-    var col = {Distinction:p.good, Pass:p.accent, Fail:p.warn, Withdrawn:p.bad};
+    var c = charts.donutChart || mk('donutChart');
     var data = Object.keys(D.final_result).map(function(k){
-      return {name:k, value:D.final_result[k], itemStyle:{color:col[k]}};
+      return {name:k, value:D.final_result[k], itemStyle:{color:OCOL[k]}};
     });
-    c.setOption({
-      tooltip:{trigger:'item', formatter:function(o){return o.name+': '+o.value+'%  ('+D.final_counts[o.name].toLocaleString('en-US')+')';}},
-      legend:{bottom:0, textStyle:{color:p.muted}},
-      series:[{type:'pie', radius:['52%','78%'], center:['50%','46%'], avoidLabelOverlap:true,
-        itemStyle:{borderColor:p.card, borderWidth:3},
-        label:{formatter:'{b}\n{d}%', color:p.ink}, data:data, animationDuration:700,
-        emphasis:{scale:true, scaleSize:6}}]
-    });
+    c.setOption(root({
+      tooltip:{trigger:'item', textStyle:{fontFamily:SERIF}, formatter:function(o){return o.name+': '+o.value+'%  ('+D.final_counts[o.name].toLocaleString('en-US')+')';}},
+      legend:{bottom:0, textStyle:{color:P.muted, fontFamily:SERIF}},
+      series:[{type:'pie', radius:['50%','74%'], center:['50%','45%'], avoidLabelOverlap:true,
+        itemStyle:{borderColor:P.card, borderWidth:2},
+        label:{formatter:'{b}\n{d}%', color:P.ink, fontFamily:SERIF}, data:data, animationDuration:600,
+        emphasis:{scale:true, scaleSize:5}}]
+    }));
   }
 
   /* ================= DISPARITY ================= */
@@ -223,25 +194,22 @@
     });
   })();
   function renderDisp(){
-    var p = palette(), c = charts.dispChart || mk('dispChart');
+    var c = charts.dispChart || mk('dispChart');
     var rows = D.disparity[dispKey];
-    c.setOption({
-      grid: Object.assign({}, baseGrid, {left:8,right:46,top:10}), animationDuration:600,
-      tooltip:{trigger:'item', valueFormatter:function(v){return (v*100).toFixed(1)+'%';}},
-      xAxis: Object.assign({type:'value', max:0.8, axisLabel:{color:p.muted, formatter:function(v){return Math.round(v*100)+'%';}}}, axisStyle(p)),
-      yAxis: Object.assign({type:'category', data:rows.map(function(r){return r[0];}).reverse()}, axisStyle(p), {splitLine:{show:false}}),
-      series:[{type:'bar', barWidth:'58%',
+    c.setOption(root({
+      grid: Object.assign({}, baseGrid, {left:8,right:46,top:10}), animationDuration:500,
+      tooltip:{trigger:'item', textStyle:{fontFamily:SERIF}, valueFormatter:function(v){return (v*100).toFixed(1)+'%';}},
+      xAxis: Object.assign({type:'value', max:0.8, axisLabel:{color:P.muted, fontFamily:SERIF, formatter:function(v){return Math.round(v*100)+'%';}}}, axisStyle()),
+      yAxis: Object.assign({type:'category', data:rows.map(function(r){return r[0];}).reverse()}, axisStyle(), {splitLine:{show:false}}),
+      series:[{type:'bar', barWidth:'56%',
         data:rows.map(function(r){return r[1];}).reverse().map(function(v){
-          return {value:v, itemStyle:{color: v>=0.6?p.bad:(v>=0.5?p.warn:p.accent), borderRadius:[0,6,6,0]}};}),
-        label:{show:true, position:'right', color:p.muted, formatter:function(o){return (o.value*100).toFixed(1)+'%';}}}]
-    });
+          return {value:v, itemStyle:{color: v>=0.6?P.maroon:(v>=0.5?P.ochre:P.navy)}};}),
+        label:{show:true, position:'right', color:P.muted, fontFamily:SERIF, formatter:function(o){return (o.value*100).toFixed(1)+'%';}}}]
+    }));
   }
 
   /* ---------- orchestrate ---------- */
-  function renderAll(){
-    renderEarly(); renderDrivers(); renderRadar(); renderFair(); renderDonut(); renderDisp();
-  }
   document.getElementById('weekSlider').value = selWeekIdx;
-  renderAll(); updateReadout();
+  renderEarly(); renderDrivers(); renderRadar(); renderFair(); renderDonut(); renderDisp(); updateReadout();
   window.addEventListener('resize', function(){ Object.keys(charts).forEach(function(k){ charts[k].resize(); }); });
 })();
