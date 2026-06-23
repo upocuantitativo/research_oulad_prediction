@@ -1,10 +1,11 @@
-/* Embedded study results for the OULAD MPI decision-support dashboard.
+/* Embedded study results for the OULAD MPI decision-support companion.
    Generated from scripts_results/results*.json and tab3_leakage_safe_importance.csv.
-   All numbers are real outputs of the reproducible pipeline (seed = 42). */
+   All numbers are real outputs of the reproducible pipeline (seed = 42).
+   drivers[].sd = permutation-importance SD (10 repeats); disparity rows = [label, rate, n]. */
 window.DATA = {
   n_total: 32593,
   n_mpi: 28563,
-  adverse_rate: 52.8,
+  adverse_rate: 0.528,
   auc_leakage_safe: 0.969,
   final_result: { Pass: 37.93, Withdrawn: 31.16, Fail: 21.64, Distinction: 9.28 },
   final_counts: { Pass: 12361, Withdrawn: 10156, Fail: 7052, Distinction: 3024 },
@@ -26,19 +27,20 @@ window.DATA = {
     corr_passed: { D1: 0.4172, D2: -0.1396, D3: 0.1637, D4: -0.006, MPI: 0.1306 }
   },
 
+  /* mean |SHAP|, permutation importance, and permutation SD (10 repeats) */
   drivers: [
-    { f: "prop_active_weeks", fam: "behavioural", shap: 0.13243, perm: 0.08916 },
-    { f: "n_assessments",     fam: "behavioural", shap: 0.07912, perm: 0.01603 },
-    { f: "n_submissions",     fam: "behavioural", shap: 0.07136, perm: 0.03729 },
-    { f: "total_clicks",      fam: "behavioural", shap: 0.04347, perm: 0.00288 },
-    { f: "D1 engagement",     fam: "MPI",         shap: 0.03718, perm: -0.00075 },
-    { f: "consistency_inv_cv",fam: "behavioural", shap: 0.02528, perm: 0.00018 },
-    { f: "on_time_rate",      fam: "behavioural", shap: 0.02340, perm: 0.00421 },
-    { f: "D4 persistence",    fam: "MPI",         shap: 0.02199, perm: 0.00281 },
-    { f: "mean_lead_days",    fam: "behavioural", shap: 0.02117, perm: 0.00378 },
-    { f: "D3 timeliness",     fam: "MPI",         shap: 0.01923, perm: 0.00194 },
-    { f: "n_activity_types",  fam: "behavioural", shap: 0.01191, perm: 0.00320 },
-    { f: "resource_entropy",  fam: "behavioural", shap: 0.00915, perm: -0.00027 }
+    { f: "prop_active_weeks", fam: "behavioural", shap: 0.13243, perm: 0.08916, sd: 0.00353 },
+    { f: "n_assessments",     fam: "behavioural", shap: 0.07912, perm: 0.01603, sd: 0.00174 },
+    { f: "n_submissions",     fam: "behavioural", shap: 0.07136, perm: 0.03729, sd: 0.00185 },
+    { f: "total_clicks",      fam: "behavioural", shap: 0.04347, perm: 0.00288, sd: 0.00122 },
+    { f: "D1 engagement",     fam: "MPI",         shap: 0.03718, perm: -0.00075, sd: 0.00056 },
+    { f: "consistency_inv_cv",fam: "behavioural", shap: 0.02528, perm: 0.00018, sd: 0.00108 },
+    { f: "on_time_rate",      fam: "behavioural", shap: 0.02340, perm: 0.00421, sd: 0.00067 },
+    { f: "D4 persistence",    fam: "MPI",         shap: 0.02199, perm: 0.00281, sd: 0.00092 },
+    { f: "mean_lead_days",    fam: "behavioural", shap: 0.02117, perm: 0.00378, sd: 0.00067 },
+    { f: "D3 timeliness",     fam: "MPI",         shap: 0.01923, perm: 0.00194, sd: 0.00119 },
+    { f: "n_activity_types",  fam: "behavioural", shap: 0.01191, perm: 0.00320, sd: 0.00097 },
+    { f: "resource_entropy",  fam: "behavioural", shap: 0.00915, perm: -0.00027, sd: 0.00068 }
   ],
 
   cv: { no_mpi: 0.9357, with_mpi: 0.9490, lift: 0.0132, p: "< 0.001" },
@@ -65,15 +67,15 @@ window.DATA = {
 
   disparity: {
     "Highest education": [
-      ["No formal quals", 0.7032], ["Lower than A Level", 0.6115],
-      ["A Level / equiv.", 0.4797], ["HE qualification", 0.4383],
-      ["Postgraduate", 0.3450]
+      ["No formal quals", 0.7032, 347], ["Lower than A Level", 0.6115, 13158],
+      ["A Level / equiv.", 0.4797, 14045], ["HE qualification", 0.4383, 4730],
+      ["Postgraduate", 0.3450, 313]
     ],
     "Deprivation (IMD decile)": [
-      ["0-10 (most)", 0.6484], ["10-20", 0.6138], ["20-30", 0.5925],
-      ["30-40", 0.5309], ["40-50", 0.5341], ["50-60", 0.5122],
-      ["60-70", 0.4809], ["70-80", 0.4849], ["80-90", 0.4594],
-      ["90-100 (least)", 0.4247]
+      ["0-10 (most)", 0.6484, 3311], ["10-20", 0.6138, 3516], ["20-30", 0.5925, 3654],
+      ["30-40", 0.5309, 3539], ["40-50", 0.5341, 3256], ["50-60", 0.5122, 3124],
+      ["60-70", 0.4809, 2905], ["70-80", 0.4849, 2879], ["80-90", 0.4594, 2762],
+      ["90-100 (least)", 0.4247, 2536]
     ]
   }
 };

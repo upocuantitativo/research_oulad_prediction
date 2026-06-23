@@ -106,9 +106,12 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;bac
 .mini{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .stat{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
 .stat .v{font-size:1.4rem;font-weight:700;font-variant-numeric:tabular-nums} .stat .l{font-size:.76rem;color:var(--muted);font-family:var(--sans)}
-.delta-up{color:var(--good)} .delta-dn{color:var(--bad)}
+.delta-up{color:var(--ink)} .delta-dn{color:var(--ink)}
 
 figcaption,.figcap{font-size:.86rem;color:var(--ink);margin-top:10px;text-align:justify;line-height:1.5}
+.fignote{font-size:.76rem;color:var(--muted);margin-top:5px;text-align:justify;line-height:1.45}
+.fignote::before{content:"Note. ";font-style:italic;font-weight:600;color:var(--ink)}
+.legend-shapes{font-family:var(--sans);font-size:.74rem;color:var(--muted);margin-top:7px}
 
 footer{padding:26px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:.86rem;font-family:var(--sans)}
 .foot-grid{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between}
@@ -176,6 +179,8 @@ footer a{color:#1a4d8c}
       </div>
       <div id="earlyChart" class="chart"></div>
       <div class="figcap"><b>Figure 1.</b> Leakage-safe early-warning ROC-AUC by course week (cumulative behaviour only; n = 28,497).</div>
+      <div class="fignote">Point estimates on a 25% stratified hold-out using only behaviour cumulated to week <i>w</i> (no end-of-course
+      features). Shaded band marks the high-confidence region (AUC&nbsp;&ge;&nbsp;0.90); the dashed crosshair locates the selected week. Minor ticks every quarter-interval.</div>
     </div>
     <div class="aside">
       <div class="readout">
@@ -209,7 +214,11 @@ footer a{color:#1a4d8c}
         <button data-k="perm">permutation</button>
       </div></div>
       <div id="driverChart" class="chart" style="height:430px"></div>
-      <div class="figcap"><b>Figure 2.</b> Leakage-safe drivers of course passing. Colour denotes feature family: behavioural (navy), MPI (maroon), demographic (grey).</div>
+      <div class="figcap"><b>Figure 2.</b> Cleveland dot plot of leakage-safe drivers of course passing, ranked by mean&nbsp;|SHAP|. Marker
+      shape encodes feature family: <b>&#9679;</b>&nbsp;behavioural, <b>&#9632;</b>&nbsp;MPI, <b>&#9650;</b>&nbsp;demographic.</div>
+      <div class="fignote">Whiskers show &plusmn;1&nbsp;SD of permutation importance over 10 repeats (displayed for the permutation
+      measure; SHAP reports the mean only). Dashed line marks zero importance; 12 of 20 modelled features shown. Removing leakage lowers
+      AUC only from 0.983 to 0.969, confirming the model learns behaviour rather than restated grades.</div>
     </div>
     <div class="aside">
       <div class="card">
@@ -220,8 +229,8 @@ footer a{color:#1a4d8c}
         <i>incremental, interpretable</i> contributors. Removing leakage barely dents performance (AUC 0.983 → 0.969),
         confirming the model learns behaviour, not a restated grade.</p>
         <div class="mini" style="margin-top:6px">
-          <div class="stat"><div class="v" style="color:var(--navy)">7 / 10</div><div class="l">top features are behavioural</div></div>
-          <div class="stat"><div class="v" style="color:var(--maroon)">3 / 10</div><div class="l">are MPI motivation dimensions</div></div>
+          <div class="stat"><div class="v">7 / 10</div><div class="l">top features are behavioural</div></div>
+          <div class="stat"><div class="v">3 / 10</div><div class="l">are MPI motivation dimensions</div></div>
         </div>
       </div>
     </div>
@@ -240,15 +249,19 @@ footer a{color:#1a4d8c}
     <div class="card">
       <div class="controls" id="mpiChecks">Show outcomes:&nbsp;</div>
       <div id="radarChart" class="chart" style="height:420px"></div>
-      <div class="figcap"><b>Figure 3.</b> Motivation Proxy Index profile by final outcome (standardised dimension means).</div>
+      <div class="figcap"><b>Figure 3.</b> Motivation Proxy Index profile by final outcome (standardised dimension means). Outcomes are
+      distinguished by line style and marker, not colour.</div>
+      <div class="fignote">Radial axis spans &minus;0.32 to +0.42&nbsp;SD. Distinction and Pass profiles expand on engagement (D1) and
+      timeliness (D3); Fail and Withdrawn contract on them. Two dimensions (D2 diversity, D4 persistence) run against theoretical expectation
+      (see validity panel).</div>
     </div>
     <div class="aside">
       <div class="card">
         <h3>Dimension validity (r with passing)</h3>
-        <div class="kv"><span class="m">D1 Engagement</span><span class="n" style="color:var(--good)">+0.417 ✓</span></div>
-        <div class="kv"><span class="m">D3 Timeliness</span><span class="n" style="color:var(--good)">+0.164 ✓</span></div>
-        <div class="kv"><span class="m">D4 Persistence</span><span class="n" style="color:var(--warn)">−0.006 ✗ null</span></div>
-        <div class="kv"><span class="m">D2 Diversity</span><span class="n" style="color:var(--bad)">−0.140 ✗ reversed</span></div>
+        <div class="kv"><span class="m">D1 Engagement</span><span class="n">+0.417 ✓</span></div>
+        <div class="kv"><span class="m">D3 Timeliness</span><span class="n">+0.164 ✓</span></div>
+        <div class="kv"><span class="m">D4 Persistence</span><span class="n">−0.006 ✗ null</span></div>
+        <div class="kv"><span class="m">D2 Diversity</span><span class="n">−0.140 ✗ reversed</span></div>
         <p class="note" style="margin-top:10px">Reported transparently: two of four theory-motivated dimensions did
         not validate as expected and need re-specification — honesty a reviewer rewards.</p>
       </div>
@@ -271,7 +284,11 @@ footer a{color:#1a4d8c}
         <button data-k="after">group-aware</button>
       </div></div>
       <div id="fairChart" class="chart" style="height:360px"></div>
-      <div class="figcap"><b>Figure 4.</b> True-positive rate by prior-attempt group; the dashed connector marks the equal-opportunity gap.</div>
+      <div class="figcap"><b>Figure 4.</b> Connected-dot (dumbbell) plot of true-positive rate by prior-attempt group:
+      <b>&#9675;</b>&nbsp;standard&nbsp;0.50 threshold, <b>&#9679;</b>&nbsp;group-aware threshold; the connector spans the change.</div>
+      <div class="fignote">The between-group equal-opportunity (TPR) gap falls from 0.077 to 0.047 at a cost of &minus;0.2&nbsp;pp accuracy
+      and unchanged AUC (0.969). Group sizes: prior&nbsp;attempts&nbsp;&gt;&nbsp;0, n&nbsp;=&nbsp;1,051; prior&nbsp;attempts&nbsp;=&nbsp;0,
+      n&nbsp;=&nbsp;7,098. Use the toggle to emphasise either threshold.</div>
     </div>
     <div class="aside">
       <div class="card">
@@ -280,7 +297,7 @@ footer a{color:#1a4d8c}
           <div class="stat"><div class="v" id="eoVal">0.077</div><div class="l">TPR gap (lower = fairer)</div></div>
           <div class="stat"><div class="v" id="accVal">91.5%</div><div class="l">Overall accuracy</div></div>
         </div>
-        <div class="kv" style="margin-top:8px"><span class="m">Disability — equalised odds gap</span><span class="n" style="color:var(--good)">0.015 ✓</span></div>
+        <div class="kv" style="margin-top:8px"><span class="m">Disability — equalised odds gap</span><span class="n">0.015 ✓</span></div>
         <div class="kv"><span class="m">Mitigation cost in accuracy</span><span class="n">−0.2 pp</span></div>
         <div class="kv"><span class="m">Change in AUC</span><span class="n">none (0.969)</span></div>
         <p class="note" style="margin-top:8px" id="mitNote"></p>
@@ -298,10 +315,18 @@ footer a{color:#1a4d8c}
     not just a predictive one.</p>
   </div>
   <div class="grid g-2">
-    <div class="card"><h3>Final result distribution</h3><div id="donutChart" class="chart" style="height:340px"></div></div>
+    <div class="card"><h3>Final result distribution</h3>
+      <div id="outcomeChart" class="chart" style="height:300px"></div>
+      <div class="figcap"><b>Figure 5.</b> Final-result distribution (% of N = 32,593 enrolments; n in parentheses).</div>
+      <div class="fignote">Bars use grayscale fills with distinct hatching, an accessible monochrome encoding that remains legible
+      in print and to colour-blind readers.</div>
+    </div>
     <div class="card">
       <div class="controls">Protected attribute:&nbsp;<div class="seg" id="dispSeg"></div></div>
-      <div id="dispChart" class="chart" style="height:340px"></div>
+      <div id="dispChart" class="chart" style="height:300px"></div>
+      <div class="figcap"><b>Figure 6.</b> Adverse-outcome (fail or withdraw) rate by group; fill darkens with the rate.</div>
+      <div class="fignote">Dashed line marks the overall adverse rate (52.8%). Group n in parentheses; both gradients are
+      near-monotone, motivating the fairness audit (Figure&nbsp;4).</div>
     </div>
   </div>
 </section>
