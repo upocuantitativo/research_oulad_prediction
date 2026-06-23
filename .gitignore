@@ -3,4 +3,8 @@ __pycache__/
 .venv/
 corpus_pdfs/
 *.pdf
-!Manuscrito_MPI_OULAD.docx
+# Manuscript and student-level data are intentionally NOT published in this repo
+Manuscrito_MPI_OULAD.docx
+MANUSCRITO_MPI_OULAD.md
+MARCO_CONCEPTUAL_Y_GAP.md
+scripts_results/mpi_features.csv
