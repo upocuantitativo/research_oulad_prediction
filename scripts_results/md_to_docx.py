@@ -1,27 +1,41 @@
 # -*- coding: utf-8 -*-
 """Minimal Markdown -> .docx converter for the manuscript (headings, bold/italic,
-tables, bullet lists, paragraphs). Usage: python md_to_docx.py <in.md> <out.docx>"""
-import sys, re
+tables, bullet lists, paragraphs, images, and red callouts).
+Usage: python md_to_docx.py <in.md> <out.docx>
+
+Extensions over plain Markdown:
+  * Images:        ![Caption text](relative/path.png)   -> centred picture + italic caption
+  * Red block:     :::red ... :::                        -> paragraphs rendered in red
+  * Inline red:    {{red text}}                          -> red run inside any paragraph
+"""
+import sys, re, os
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Inches, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
-def add_runs(par, text):
-    # handle **bold**, *italic*, `code`; strip markdown tokens
-    tokens = re.split(r'(\*\*.+?\*\*|\*.+?\*|`.+?`)', text)
+RED = RGBColor(0xC0, 0x00, 0x00)
+
+def add_runs(par, text, color=None):
+    # handle **bold**, *italic*, `code`, {{red}}; strip markdown tokens
+    tokens = re.split(r'(\*\*.+?\*\*|\*.+?\*|`.+?`|\{\{.+?\}\})', text)
     for tok in tokens:
         if not tok:
             continue
         if tok.startswith('**') and tok.endswith('**'):
             r = par.add_run(tok[2:-2]); r.bold = True
+        elif tok.startswith('{{') and tok.endswith('}}'):
+            r = par.add_run(tok[2:-2]); r.font.color.rgb = RED
         elif tok.startswith('*') and tok.endswith('*'):
             r = par.add_run(tok[1:-1]); r.italic = True
         elif tok.startswith('`') and tok.endswith('`'):
             r = par.add_run(tok[1:-1]); r.font.name = 'Consolas'
         else:
-            par.add_run(tok)
+            r = par.add_run(tok)
+        if color is not None and r.font.color.rgb is None:
+            r.font.color.rgb = color
 
 def main(src, dst):
+    base = os.path.dirname(os.path.abspath(src))
     lines = open(src, encoding='utf-8').read().splitlines()
     doc = Document()
     style = doc.styles['Normal']; style.font.name = 'Calibri'; style.font.size = Pt(11)
@@ -32,6 +46,32 @@ def main(src, dst):
             i += 1; continue
         if ln.strip() == '---':
             i += 1; continue
+        # image:  ![Caption](path)
+        mimg = re.match(r'^!\[(.*?)\]\((.+?)\)\s*$', ln.strip())
+        if mimg:
+            caption, path = mimg.group(1), mimg.group(2).strip()
+            ipath = path if os.path.isabs(path) else os.path.join(base, path)
+            p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            try:
+                p.add_run().add_picture(ipath, width=Inches(5.6))
+            except Exception as e:
+                add_runs(p, f'[image not found: {path}]')
+            if caption:
+                cp = doc.add_paragraph(); cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                cr = cp.add_run(caption); cr.italic = True; cr.font.size = Pt(9.5)
+                cr.font.color.rgb = RGBColor(0x44, 0x44, 0x44)
+            i += 1; continue
+        # red callout block:  :::red ... :::
+        if ln.strip().lower() == ':::red':
+            i += 1
+            while i < len(lines) and lines[i].strip() != ':::':
+                btxt = lines[i].rstrip()
+                if btxt.strip():
+                    p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+                    add_runs(p, btxt, color=RED)
+                i += 1
+            i += 1  # skip closing :::
+            continue
         # table block
         if ln.lstrip().startswith('|'):
             block = []
@@ -74,7 +114,7 @@ def main(src, dst):
             i += 1; continue
         # normal paragraph (gather until blank)
         para = [ln]; i += 1
-        while i < len(lines) and lines[i].strip() and not lines[i].lstrip().startswith(('|','#','-','*','>')) and lines[i].strip() != '---':
+        while i < len(lines) and lines[i].strip() and not lines[i].lstrip().startswith(('|','#','-','*','>','!',':::')) and lines[i].strip() != '---':
             para.append(lines[i].rstrip()); i += 1
         p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
         add_runs(p, ' '.join(para))

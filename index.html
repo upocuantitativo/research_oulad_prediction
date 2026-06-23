@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OULAD MPI · Decision-Support Dashboard</title>
+<meta name="description" content="Interactive decision-support tool for fairness-aware, explainable early prediction of academic failure (OULAD, Motivation Proxy Index).">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="data.js"></script>
+<style>
+:root{
+  --bg:#f6f8fc; --bg2:#eef2fb; --card:#ffffff; --ink:#0f172a; --muted:#5b6678;
+  --line:#e6ebf3; --accent:#2563eb; --accent2:#7c3aed; --good:#059669; --warn:#d97706; --bad:#dc2626;
+  --shadow:0 10px 30px rgba(15,23,42,.08); --radius:18px;
+}
+html[data-theme="dark"]{
+  --bg:#0b1020; --bg2:#0e1530; --card:#121a33; --ink:#eaf0ff; --muted:#9aa7c2;
+  --line:#21304f; --accent:#5b8cff; --accent2:#a78bfa; --good:#34d399; --warn:#fbbf24; --bad:#f87171;
+  --shadow:0 14px 40px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
+a{color:var(--accent);text-decoration:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;overflow:hidden;padding:74px 0 40px;
+  background:
+    radial-gradient(60% 90% at 12% 0%, rgba(124,58,237,.20), transparent 60%),
+    radial-gradient(55% 85% at 90% 10%, rgba(37,99,235,.22), transparent 62%),
+    radial-gradient(50% 70% at 60% 100%, rgba(5,150,105,.16), transparent 60%),
+    var(--bg2);
+}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent,var(--bg));pointer-events:none}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:.78rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);
+  padding:6px 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent)}
+h1.title{font-size:clamp(1.9rem,4.6vw,3.05rem);line-height:1.08;margin:.5em 0 .35em;letter-spacing:-.02em;font-weight:800}
+.title .g{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:1.08rem;color:var(--muted);max-width:760px;margin:0}
+.hero-cta{margin-top:22px;display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:12px;font-weight:600;
+  border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;box-shadow:var(--shadow);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border:0}
+
+/* ---------- KPIs ---------- */
+.kpis{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 20px 18px;box-shadow:var(--shadow)}
+.kpi .v{font-size:2.05rem;font-weight:800;letter-spacing:-.02em}
+.kpi .l{color:var(--muted);font-size:.86rem;margin-top:2px}
+.kpi .s{font-size:.78rem;color:var(--accent);font-weight:600;margin-top:8px}
+
+/* ---------- NAV ---------- */
+.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
+  background:color-mix(in srgb,var(--bg) 80%,transparent);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:56px}
+.nav .brand{font-weight:800;letter-spacing:-.01em}
+.nav .links{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.nav a.link{color:var(--muted);font-weight:600;font-size:.9rem;padding:7px 11px;border-radius:9px}
+.nav a.link:hover{color:var(--ink);background:var(--bg2)}
+.toggle{margin-left:8px;width:42px;height:42px;border-radius:11px;border:1px solid var(--line);background:var(--card);
+  cursor:pointer;font-size:1.1rem;display:grid;place-items:center}
+
+/* ---------- SECTIONS ---------- */
+section{padding:54px 0;border-top:1px solid var(--line)}
+.sec-head{max-width:780px;margin-bottom:26px}
+.sec-tag{font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2)}
+.sec-head h2{font-size:clamp(1.5rem,3vw,2.1rem);margin:.25em 0 .35em;letter-spacing:-.02em;font-weight:800}
+.sec-head p{color:var(--muted);margin:0;font-size:1.02rem}
+
+.grid{display:grid;gap:20px}
+.g-2{grid-template-columns:1.55fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.card h3{margin:.1em 0 .5em;font-size:1.05rem}
+.chart{width:100%;height:380px}
+.aside{display:flex;flex-direction:column;gap:14px}
+.readout{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 8%,var(--card)),var(--card));
+  border:1px solid var(--line);border-radius:14px;padding:18px}
+.readout .big{font-size:2.5rem;font-weight:800;letter-spacing:-.02em;line-height:1}
+.badge{display:inline-block;padding:5px 12px;border-radius:999px;font-weight:700;font-size:.82rem;margin-top:8px}
+.b-low{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.b-mid{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.b-high{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.action{font-size:.95rem;color:var(--ink)}
+.action b{color:var(--accent)}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:6px}
+.seg{display:inline-flex;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:4px}
+.seg button{border:0;background:transparent;color:var(--muted);font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;font-size:.9rem}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.chk{display:inline-flex;gap:7px;align-items:center;font-size:.88rem;color:var(--muted);cursor:pointer;user-select:none;
+  border:1px solid var(--line);padding:6px 11px;border-radius:999px}
+.chk input{accent-color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent);height:6px}
+.slider-wrap{margin:6px 0 2px}
+.wk{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;margin-top:4px}
+
+.kv{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+.kv:last-child{border-bottom:0}
+.kv .m{color:var(--muted)} .kv .n{font-weight:700}
+.note{font-size:.82rem;color:var(--muted)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:var(--bg2);border-radius:12px;padding:13px}
+.stat .v{font-size:1.5rem;font-weight:800} .stat .l{font-size:.78rem;color:var(--muted)}
+.delta-up{color:var(--good)} .delta-dn{color:var(--bad)}
+
+footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+footer a{font-weight:600}
+.foot-grid{display:flex;flex-wrap:wrap;gap:26px;justify-content:space-between}
+
+@media(max-width:880px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .g-2{grid-template-columns:1fr}
+  .nav .links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav"><div class="wrap">
+  <span class="brand">OULAD&nbsp;<span style="color:var(--accent2)">MPI</span></span>
+  <nav class="links">
+    <a class="link" href="#simulator">Early warning</a>
+    <a class="link" href="#drivers">Risk drivers</a>
+    <a class="link" href="#mpi">MPI profile</a>
+    <a class="link" href="#fairness">Fairness</a>
+    <a class="link" href="#outcomes">Outcomes</a>
+  </nav>
+  <button class="toggle" id="themeBtn" title="Toggle light / dark">🌙</button>
+</div></div>
+
+<!-- HERO -->
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">● Decision-support dashboard · OULAD</span>
+  <h1 class="title">Spot academic risk early —<br><span class="g">act fairly, and know why</span></h1>
+  <p class="lede">An interactive companion to the study <i>“A Theory-Grounded Motivation Proxy Index for Fairness-Aware
+  and Explainable Early Prediction of Academic Failure in Online Higher Education.”</i> Explore when a student can be
+  reliably flagged, what drives the flag, the motivational profile behind it, and the equity trade-offs — all from real
+  results on 32,593 enrolments. Everything runs in your browser; no data leaves this device.</p>
+  <div class="hero-cta">
+    <a class="btn primary" href="#simulator">▶ Open the early-warning simulator</a>
+    <a class="btn" href="Manuscrito_MPI_OULAD.docx">📄 Read the manuscript</a>
+    <a class="btn" href="https://github.com/upocuantitativo/research_oulad_prediction" target="_blank" rel="noopener">⌥ Code & data</a>
+  </div>
+
+  <div class="kpis" id="kpis">
+    <div class="kpi"><div class="v" data-count="32593" data-suffix="">0</div><div class="l">Student enrolments</div><div class="s">22 module-presentations</div></div>
+    <div class="kpi"><div class="v" data-count="52.8" data-dec="1" data-suffix="%">0</div><div class="l">End in failure or withdrawal</div><div class="s">the cost of acting late</div></div>
+    <div class="kpi"><div class="v" data-count="0.969" data-dec="3" data-suffix="">0</div><div class="l">ROC-AUC, leakage-safe model</div><div class="s">real signal, not restated grades</div></div>
+    <div class="kpi"><div class="v" data-count="20" data-suffix="" data-prefix="Wk ">0</div><div class="l">First high-confidence week</div><div class="s">usable triage already by week 16</div></div>
+  </div>
+</div></header>
+
+<main class="wrap">
+
+<!-- SIMULATOR -->
+<section id="simulator">
+  <div class="sec-head">
+    <div class="sec-tag">Decision 1 · Timing</div>
+    <h2>When should you intervene?</h2>
+    <p>Move the week slider to see how confident the leakage-safe early-warning model is using only the behaviour
+    accumulated <i>up to that week</i>. The recommendation panel translates model confidence into a concrete action.</p>
+  </div>
+  <div class="grid g-2">
+    <div class="card">
+      <div class="slider-wrap">
+        <input type="range" id="weekSlider" min="0" max="7" step="1" value="4">
+        <div class="wk"><span>Week 4</span><span>8</span><span>12</span><span>16</span><span>20</span><span>24</span><span>28</span><span>Week 32</span></div>
+      </div>
+      <div id="earlyChart" class="chart"></div>
+    </div>
+    <div class="aside">
+      <div class="readout">
+        <div class="note">Model confidence at <b id="roWeek">week 16</b></div>
+        <div class="big" id="roAuc">0.87</div>
+        <div class="badge b-mid" id="roBadge">Usable triage</div>
+        <p class="action" id="roAction" style="margin:.7em 0 0"></p>
+      </div>
+      <div class="card" style="box-shadow:none;padding:16px">
+        <div class="kv"><span class="m">Discrimination (ROC-AUC)</span><span class="n" id="kAuc">0.871</span></div>
+        <div class="kv"><span class="m">Confidence tier</span><span class="n" id="kTier">Usable</span></div>
+        <div class="kv"><span class="m">Cohort analysed</span><span class="n">28,497</span></div>
+        <div class="kv"><span class="m">Recommended channel</span><span class="n" id="kChan">Tutor outreach</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DRIVERS -->
+<section id="drivers">
+  <div class="sec-head">
+    <div class="sec-tag">Decision 2 · Why flagged</div>
+    <h2>What actually drives the risk?</h2>
+    <p>Leakage-safe Random-Forest importances. The signal is <b>behavioural, not demographic</b> — no protected attribute
+    reaches the top tier. Switch between SHAP and permutation views.</p>
+  </div>
+  <div class="grid g-2">
+    <div class="card">
+      <div class="controls"><div class="seg" id="impSeg">
+        <button class="on" data-k="shap">Mean |SHAP|</button>
+        <button data-k="perm">Permutation</button>
+      </div></div>
+      <div id="driverChart" class="chart"></div>
+    </div>
+    <div class="aside">
+      <div class="card" style="box-shadow:none">
+        <h3>Read it as</h3>
+        <p class="note" style="font-size:.95rem;line-height:1.6">
+        The strongest driver is the <b>proportion of active course weeks</b> — a pure engagement signal — followed by
+        assessment and submission activity. The three Motivation Proxy Index dimensions (purple) enter as
+        <i>incremental, interpretable</i> contributors. Removing leakage barely dents performance (AUC 0.983 → 0.969),
+        confirming the model learns behaviour, not a restated grade.</p>
+        <div class="mini" style="margin-top:6px">
+          <div class="stat"><div class="v" style="color:var(--accent)">7 / 10</div><div class="l">top features are behavioural</div></div>
+          <div class="stat"><div class="v" style="color:var(--accent2)">3 / 10</div><div class="l">are MPI motivation dimensions</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MPI -->
+<section id="mpi">
+  <div class="sec-head">
+    <div class="sec-tag">Decision 3 · The motivational story</div>
+    <h2>The Motivation Proxy Index profile</h2>
+    <p>Standardised MPI dimensions by outcome. Distinction/Pass learners lean on <b>engagement</b> and
+    <b>timeliness</b>; Fail/Withdrawn invert it. Toggle outcomes to compare profiles.</p>
+  </div>
+  <div class="grid g-2">
+    <div class="card">
+      <div class="controls" id="mpiChecks"></div>
+      <div id="radarChart" class="chart"></div>
+    </div>
+    <div class="aside">
+      <div class="card" style="box-shadow:none">
+        <h3>Dimension validity (r with passing)</h3>
+        <div class="kv"><span class="m">D1 Engagement</span><span class="n" style="color:var(--good)">+0.417 ✓</span></div>
+        <div class="kv"><span class="m">D3 Timeliness</span><span class="n" style="color:var(--good)">+0.164 ✓</span></div>
+        <div class="kv"><span class="m">D4 Persistence</span><span class="n" style="color:var(--warn)">−0.006 ✗ null</span></div>
+        <div class="kv"><span class="m">D2 Diversity</span><span class="n" style="color:var(--bad)">−0.140 ✗ reversed</span></div>
+        <p class="note" style="margin-top:10px">Reported transparently: two of four theory-motivated dimensions did
+        not validate as expected and need re-specification — honesty a reviewer rewards.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAIRNESS -->
+<section id="fairness">
+  <div class="sec-head">
+    <div class="sec-tag">Decision 4 · Equity</div>
+    <h2>Is the alert fair — and can we fix the gap?</h2>
+    <p>True-positive rate (recall on students who actually pass) by group. A group-aware decision threshold closes the
+    equal-opportunity gap for repeat-attempt students at almost no accuracy cost. Toggle mitigation on/off.</p>
+  </div>
+  <div class="grid g-2">
+    <div class="card">
+      <div class="controls"><div class="seg" id="mitSeg">
+        <button class="on" data-k="before">Before mitigation</button>
+        <button data-k="after">After (group-aware threshold)</button>
+      </div></div>
+      <div id="fairChart" class="chart"></div>
+    </div>
+    <div class="aside">
+      <div class="card" style="box-shadow:none">
+        <h3>Equal-opportunity gap (prior attempts)</h3>
+        <div class="mini">
+          <div class="stat"><div class="v" id="eoVal">0.077</div><div class="l">TPR gap (lower = fairer)</div></div>
+          <div class="stat"><div class="v" id="accVal">91.5%</div><div class="l">Overall accuracy</div></div>
+        </div>
+        <div class="kv" style="margin-top:8px"><span class="m">Disability — equalised odds gap</span><span class="n" style="color:var(--good)">0.015 ✓</span></div>
+        <div class="kv"><span class="m">Mitigation cost in accuracy</span><span class="n">−0.2 pp</span></div>
+        <div class="kv"><span class="m">Change in AUC</span><span class="n">none (0.969)</span></div>
+        <p class="note" style="margin-top:8px" id="mitNote"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section id="outcomes">
+  <div class="sec-head">
+    <div class="sec-tag">Context · The stakes</div>
+    <h2>Outcomes and structural disparities</h2>
+    <p>The base rates the model works against, and the demographic gradients that make early warning a fairness problem,
+    not just a predictive one.</p>
+  </div>
+  <div class="grid g-2">
+    <div class="card"><h3>Final result distribution</h3><div id="donutChart" class="chart" style="height:340px"></div></div>
+    <div class="card">
+      <div class="controls"><div class="seg" id="dispSeg"></div></div>
+      <div id="dispChart" class="chart" style="height:340px"></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap foot-grid">
+  <div style="max-width:520px">
+    <b>OULAD MPI — decision-support dashboard.</b><br>
+    Companion to a fairness-aware, explainable early-warning study on the Open University Learning Analytics Dataset
+    (Kuzilek et al., 2017; CC-BY 4.0). All figures are real outputs of the reproducible pipeline (seed = 42).
+  </div>
+  <div>
+    <div><a href="Manuscrito_MPI_OULAD.docx">Manuscript (.docx)</a></div>
+    <div><a href="https://github.com/upocuantitativo/research_oulad_prediction" target="_blank" rel="noopener">GitHub repository</a></div>
+    <div><a href="https://analyse.kmi.open.ac.uk/open_dataset" target="_blank" rel="noopener">OULAD dataset</a></div>
+    <div><a href="https://upocuantitativo.github.io/motivationlearn/" target="_blank" rel="noopener">motivationlearn explorer</a></div>
+  </div>
+</div></footer>
+
+<script src="app.js"></script>
+</body>
+</html>

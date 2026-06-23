@@ -1,5 +1,9 @@
 # Research — OULAD Motivation Proxy Index (MPI) for Fairness-Aware, Explainable Early Prediction
 
+> 🎯 **Interactive decision-support dashboard:** <https://upocuantitativo.github.io/research_oulad_prediction/>
+> Explore the results interactively — an early-warning simulator (when to intervene), the leakage-safe risk drivers,
+> the MPI motivational profile by outcome, and the fairness/mitigation trade-offs. Runs entirely in the browser.
+
 This repository accompanies the manuscript **"A Theory-Grounded Motivation Proxy Index for Fairness-Aware and Explainable Early Prediction of Academic Failure in Online Higher Education"** (Universidad Pablo de Olavide).
 
 It studies academic failure/dropout on the **Open University Learning Analytics Dataset (OULAD)** by building a theory-grounded **Motivation Proxy Index (MPI)** from Virtual Learning Environment (VLE) behaviour — anchored in Self-Determination Theory, Expectancy-Value Theory and Self-Regulated Learning — and embedding it in an **explainable, fairness-aware, temporally-resolved** prediction pipeline.
